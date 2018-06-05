@@ -17,7 +17,7 @@
     "doctrine/doctrine-bundle": "1.6.*",
     "friendsofsymfony/user-bundle": "v2.1.*",
     "isics/openmiammiam-user-bundle": "dev-master",
-    "jms/serializer-bundle": "1.1.*",
+    "jms/serializer-bundle": "2.3.*",
     "knplabs/knp-menu": "2.1.*",
     "knplabs/knp-menu-bundle": "2.1.*",
     "liip/imagine-bundle": "1.6.*",

@@ -50,7 +50,7 @@ class ConsumerManager
      *
      * @param OptionsResolverInterface $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(array('ref_prefix', 'ref_pad_length'));
     }

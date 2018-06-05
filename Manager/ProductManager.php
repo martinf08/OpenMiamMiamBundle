@@ -76,7 +76,7 @@ class ProductManager
      *
      * @param OptionsResolverInterface $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(array('ref_prefix', 'ref_pad_length', 'upload_path', 'artificial_product_ref', 'artificial_product_name'));
     }

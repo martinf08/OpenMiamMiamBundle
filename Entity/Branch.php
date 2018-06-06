@@ -22,10 +22,6 @@ use ApiPlatform\Core\Annotation\ApiResource;
 /**
  * Isics\OpenMiamMiamBundle\Entity\Branch
  *
- *  @ApiResource(
- *  attributes={
- *      "normalization_context"={"groups"={"categories"}, "enable_max_depth"=true},
- *  })
  * @ORM\Table(name="branch")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\BranchRepository")
  */

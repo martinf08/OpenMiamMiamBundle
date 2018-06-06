@@ -2,6 +2,8 @@ resources:
     Isics\Bundle\OpenMiamMiamBundle\Entity\Branch:
         itemOperations:
             special:
+                normalization_context:
+                    groups: ['categories']
                 method: 'GET'
                 path: '/branch/{id}/categories'
                 requirements:

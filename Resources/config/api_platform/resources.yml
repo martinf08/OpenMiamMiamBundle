@@ -1,0 +1,41 @@
+resources:
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Branch:
+#        normalization_context:
+#            groups: ['test']
+        itemOperations:
+              get:
+                  method: 'GET'
+                  path: '/branch/{id}'
+                  requirements:
+                      association: '\d+'
+#                  normalization_context:
+#                      {'groups': ['test']}
+#        attributes:
+#            normalization_context:
+#                {'groups': ['test']}
+#            welcomeText:
+#                {'groups': ['test']}
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Association:
+        properties:
+            branch:
+                subresource:
+                    resourceClass: Isics\Bundle\OpenMiamMiamBundle\Entity\Branch
+                    collection: false
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Producer:
+        properties:
+            branch:
+                subresource:
+                    resourceClass: Isics\Bundle\OpenMiamMiamBundle\Entity\Branch
+                    collection: false
+    Isics\Bundle\OpenMiamMiamBundle\Entity\AssociationHasProducer:
+        properties:
+            branch:
+                subresource:
+                    resourceClass: Isics\Bundle\OpenMiamMiamBundle\Entity\Branch
+                    collection: false
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Product:
+        properties:
+            branch:
+                subresource:
+                    resourceClass: Isics\Bundle\OpenMiamMiamBundle\Entity\Branch
+                    collection: false

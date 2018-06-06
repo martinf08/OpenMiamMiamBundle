@@ -67,7 +67,7 @@ class Branch
 
     /**
      * @var string $address1
-     *
+     * 
      * @ORM\Column(name="address1", type="string", length=64, nullable=true)
      */
     private $address1;

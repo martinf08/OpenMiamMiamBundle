@@ -15,10 +15,17 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Isics\Bundle\OpenMiamMiamBundle\Model\Location;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\Branch
  *
+ *  @ApiResource(
+ *  attributes={
+ *      "normalization_context"={"groups"={"categories"}, "enable_max_depth"=true},
+ *  })
  * @ORM\Table(name="branch")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\BranchRepository")
  */

@@ -14,6 +14,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\Category
@@ -27,6 +28,7 @@ class Category
     /**
      * @var integer $id
      *
+     * @Groups({"categories"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -36,6 +38,7 @@ class Category
     /**
      * @var string $name
      *
+     * @Groups({"categories"})
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
     private $name;
@@ -43,6 +46,7 @@ class Category
     /**
      * @var string $slug
      *
+     * @Groups({"categories"})
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
      */
@@ -56,6 +60,7 @@ class Category
     private $products;
 
     /**
+     * @Groups({"categories"})
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */

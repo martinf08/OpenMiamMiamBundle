@@ -53,7 +53,7 @@ class ProducerAttendancesManager
      *
      * @param OptionsResolverInterface $resolver
      */
-    protected function setDefaultOptions(OptionsResolverInterface $resolver)
+    protected function setDefaultOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(array('nb_next_producer_attendances_to_define', 'upload_path'));
     }

@@ -6,6 +6,14 @@
 # with this source code in the file LICENSE.
 
 #
+# Api
+#
+api_platfrom:
+    resource: .
+    prefix: /api
+    type: api_platform
+
+#
 # General
 #
 open_miam_miam.homepage:

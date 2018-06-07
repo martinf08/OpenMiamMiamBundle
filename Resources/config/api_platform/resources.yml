@@ -9,3 +9,18 @@ resources:
                 requirements:
                     id: '\d+'
                 controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchSpecial'
+            products:
+                normalization_context:
+                    groups: ['categories']
+                method: 'GET'
+                path: '/branch/categories/products'
+                requirements:
+                    id: '\d+'
+                    idCat: '\d+'
+                swagger_context:
+                    summary: Récupère la liste des sous-catégories et des produits
+                    requestBody: '{"id": 1, "idCat":2}'
+                    parameters: 
+                        - {id: 'int', idCat: 'int'}
+                #controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchSpecial'
+        collectionOperations: []

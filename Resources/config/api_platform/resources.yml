@@ -8,4 +8,4 @@ resources:
                 path: '/branch/{id}/categories'
                 requirements:
                     id: '\d+'
-                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\BranchSpecial'
+                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchSpecial'

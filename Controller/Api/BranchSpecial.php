@@ -1,7 +1,7 @@
 <?php
 // api/src/Controller/BookSpecial.php
 
-namespace Isics\Bundle\OpenMiamMiamBundle\Controller;
+namespace Isics\Bundle\OpenMiamMiamBundle\Controller\Api;
 
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

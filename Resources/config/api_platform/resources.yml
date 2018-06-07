@@ -1,5 +1,26 @@
 resources:
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Category:
+        properties:
+            children:
+                subresource:
+                    resourceClass: 'Isics\Bundle\OpenMiamMiamBundle\Entity\Category'
+                    collection: true
+        itemOperations: ~
+        collectionOperations:
+            api_categories_childrens_get_subresource:
+                swagger_context:
+                    summary: Test
+                method: 'GET'
+                normalization_context:
+                    groups: ['category_children']
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Product:
+        itemOperations: 
+            get:
+                method: 'GET'
+        collectionOperations: []
     Isics\Bundle\OpenMiamMiamBundle\Entity\Branch:
+        #properties:
+        #    name:
         itemOperations:
             special:
                 normalization_context:
@@ -8,19 +29,36 @@ resources:
                 path: '/branch/{id}/categories'
                 requirements:
                     id: '\d+'
-                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchSpecial'
+                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchCategories'
             products:
                 normalization_context:
-                    groups: ['categories']
+                    groups: ['branch_categories_products']
                 method: 'GET'
-                path: '/branch/categories/products'
+                path: '/branch/{id}/categories/{idCat}/products'
                 requirements:
                     id: '\d+'
                     idCat: '\d+'
                 swagger_context:
                     summary: Récupère la liste des sous-catégories et des produits
                     requestBody: '{"id": 1, "idCat":2}'
-                    parameters: 
-                        - {id: 'int', idCat: 'int'}
-                #controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchSpecial'
-        collectionOperations: []
+                    parameters:
+                        -
+                            name: id
+                            in: path
+                            required: true
+                            type: integer
+                        -
+                            name: idCat
+                            in: path
+                            required: true
+                            type: integer
+                    responses:
+                        200:
+                            description: "les sous catégories avec leur produits"
+                        404:
+                            description: "Resource not found"
+                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchCategoryProducts'
+        collectionOperations: 
+            get:
+                method: 'GET'
+        

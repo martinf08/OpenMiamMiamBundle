@@ -15,10 +15,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiSubresource;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\Category
- *
+ * 
  * @Gedmo\Tree(type="nested")
  * @ORM\Table(name="category")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\CategoryRepository")
@@ -28,7 +30,7 @@ class Category
     /**
      * @var integer $id
      *
-     * @Groups({"categories"})
+     * @Groups({"categories","branch_categories_products","category_children"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -38,7 +40,7 @@ class Category
     /**
      * @var string $name
      *
-     * @Groups({"categories"})
+     * @Groups({"categories","branch_categories_products","category_children"})
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
     private $name;
@@ -46,7 +48,7 @@ class Category
     /**
      * @var string $slug
      *
-     * @Groups({"categories"})
+     * @Groups({"categories","branch_categories_products","category_children"})
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
      */
@@ -60,7 +62,7 @@ class Category
     private $products;
 
     /**
-     * @Groups({"categories"})
+     * @Groups({"categories","category_children"})
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
      */

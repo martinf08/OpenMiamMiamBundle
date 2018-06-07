@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\Product
@@ -35,6 +36,7 @@ class Product
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"branch_categories_products"})
      */
     private $id;
 
@@ -45,6 +47,7 @@ class Product
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="producer_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * })
+     * @Groups({"branch_categories_products"})
      */
     private $producer;
 
@@ -55,6 +58,7 @@ class Product
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      * })
+     * @Groups({"branch_categories_products"})
      */
     private $category;
 
@@ -62,6 +66,7 @@ class Product
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
+     * @Groups({"branch_categories_products"})
      */
     private $name;
 
@@ -70,6 +75,7 @@ class Product
      *
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
+     * @Groups({"branch_categories_products"})
      */
     private $slug;
 
@@ -85,6 +91,7 @@ class Product
      *
      * @ORM\Column(name="is_bio", type="boolean", nullable=false)
      * @todo rename to "isOrganicFood"
+     * @Groups({"branch_categories_products"})
      */
     private $isBio;
 
@@ -99,6 +106,7 @@ class Product
      * @var string $image
      *
      * @ORM\Column(name="image", type="string", length=128, nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $image;
 
@@ -123,6 +131,7 @@ class Product
      * @var string $buyingUnit
      *
      * @ORM\Column(name="buying_unit", type="string", length=64, nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $buyingUnit;
 
@@ -130,11 +139,13 @@ class Product
      * @var boolean $allowDecimalQuantity
      *
      * @ORM\Column(name="allow_decimal_quantity", type="boolean", nullable=false)
+     * @Groups({"branch_categories_products"})
      */
     private $allowDecimalQuantity;
 
     /**
      * @var boolean $hasNoPrice
+     * @Groups({"branch_categories_products"})
      */
     private $hasNoPrice;
 
@@ -142,6 +153,7 @@ class Product
      * @var decimal $price
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $price;
 
@@ -149,6 +161,7 @@ class Product
      * @var string $priceInfo
      *
      * @ORM\Column(name="price_info", type="string", length=128, nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $priceInfo;
 
@@ -156,6 +169,7 @@ class Product
      * @var integer $availability
      *
      * @ORM\Column(name="availability", type="integer", nullable=false)
+     * @Groups({"branch_categories_products"})
      */
     private $availability;
 
@@ -163,6 +177,7 @@ class Product
      * @var decimal $stock
      *
      * @ORM\Column(name="stock", type="decimal", precision=10, scale=2, nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $stock;
 
@@ -170,6 +185,7 @@ class Product
      * @var datetime $availableAt
      *
      * @ORM\Column(name="available_at", type="date", nullable=true)
+     * @Groups({"branch_categories_products"})
      */
     private $availableAt;
 

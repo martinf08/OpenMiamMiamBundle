@@ -20,7 +20,8 @@ resources:
         itemOperations: 
             get:
                 method: 'GET'
-        collectionOperations: []
+                normalization_context:
+                    groups: ['product']
     Isics\Bundle\OpenMiamMiamBundle\Entity\Branch:
         #properties:
         #    name:

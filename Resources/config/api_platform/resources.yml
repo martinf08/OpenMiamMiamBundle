@@ -5,12 +5,15 @@ resources:
                 subresource:
                     resourceClass: 'Isics\Bundle\OpenMiamMiamBundle\Entity\Category'
                     collection: true
-        itemOperations: ~
+        itemOperations: 
+            get:
+                method: 'GET' #étrangement obligatoire pour que /api/categories/{id}/childrens fonctionne...
         collectionOperations:
             api_categories_childrens_get_subresource:
                 swagger_context:
                     summary: Test
                 method: 'GET'
+                route_name: 'api_categories_childrens_get_subresource'
                 normalization_context:
                     groups: ['category_children']
     Isics\Bundle\OpenMiamMiamBundle\Entity\Product:

@@ -33,6 +33,7 @@ class Product
     /**
      * @var integer $id
      *
+     * @Groups("product")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -66,7 +67,7 @@ class Product
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $name;
 
@@ -75,13 +76,14 @@ class Product
      *
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $slug;
 
     /**
      * @var string $ref
      *
+     * @Groups("product")
      * @ORM\Column(name="ref", type="string", length=16, nullable=false)
      */
     private $ref;
@@ -91,7 +93,7 @@ class Product
      *
      * @ORM\Column(name="is_bio", type="boolean", nullable=false)
      * @todo rename to "isOrganicFood"
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $isBio;
 
@@ -106,7 +108,7 @@ class Product
      * @var string $image
      *
      * @ORM\Column(name="image", type="string", length=128, nullable=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $image;
 
@@ -123,6 +125,7 @@ class Product
     /**
      * @var string $description
      *
+     * @Groups("product")
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
@@ -153,7 +156,7 @@ class Product
      * @var decimal $price
      *
      * @ORM\Column(name="price", type="decimal", precision=10, scale=2, nullable=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $price;
 
@@ -168,8 +171,9 @@ class Product
     /**
      * @var integer $availability
      *
+     *
      * @ORM\Column(name="availability", type="integer", nullable=false)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $availability;
 
@@ -185,7 +189,7 @@ class Product
      * @var datetime $availableAt
      *
      * @ORM\Column(name="available_at", type="date", nullable=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products", "product"})
      */
     private $availableAt;
 

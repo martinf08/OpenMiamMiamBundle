@@ -15,6 +15,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Isics\Bundle\OpenMiamMiamUserBundle\Entity\User;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\Association
@@ -30,6 +31,7 @@ class Association
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"branch_infos"})
      */
     private $id;
 
@@ -37,6 +39,7 @@ class Association
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false, unique=true)
+     * @Groups({"branch_infos"})
      */
     private $name;
 
@@ -45,6 +48,7 @@ class Association
      *
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
+     * @Groups({"branch_infos"})
      */
     private $slug;
 

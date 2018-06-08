@@ -26,6 +26,17 @@ resources:
         #properties:
         #    name:
         itemOperations:
+            infos:
+                method: 'GET'
+                path: '/branch/{id}/infos'
+                normalization_context:
+                    groups: ['branch_infos']
+            occurences:
+                method: 'GET'
+                path: '/branch/{id}/occurences'
+                normalization_context:
+                    groups: ['occurences']
+                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\BranchOccurences'
             special:
                 normalization_context:
                     groups: ['categories']

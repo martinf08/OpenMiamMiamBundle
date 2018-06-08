@@ -33,6 +33,7 @@ class Branch
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"branch_infos"})
      */
     private $id;
 
@@ -43,6 +44,7 @@ class Branch
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="association_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      * })
+     * @Groups({"branch_infos"})
      */
     private $association;
 
@@ -51,6 +53,7 @@ class Branch
      *
      * @Gedmo\Slug(fields={"city"})
      * @ORM\Column(name="slug", type="string", length=64, nullable=false, unique=true)
+     * @Groups({"branch_infos"})
      */
     private $slug;
 
@@ -58,6 +61,7 @@ class Branch
      * @var string $welcomeText
      *
      * @ORM\Column(name="welcome_text", type="text", nullable=true)
+     * @Groups({"branch_infos"})
      */
     private $welcomeText;
 
@@ -93,6 +97,7 @@ class Branch
      * @var string $city
      *
      * @ORM\Column(name="city", type="string", length=64, nullable=false)
+     * @Groups({"branch_infos"})
      */
     private $city;
 
@@ -100,6 +105,7 @@ class Branch
      * @var string $departmentNumber
      *
      * @ORM\Column(name="department_number", type="string", length=2, nullable=false)
+     * @Groups({"branch_infos"})
      */
     private $departmentNumber;
 
@@ -121,6 +127,7 @@ class Branch
      * @var string $website
      *
      * @ORM\Column(name="website", type="string", length=128, nullable=true)
+     * @Groups({"branch_infos"})
      */
     private $website;
 
@@ -128,6 +135,7 @@ class Branch
      * @var string $facebook
      *
      * @ORM\Column(name="facebook", type="string", length=128, nullable=true)
+     * @Groups({"branch_infos"})
      */
     private $facebook;
 

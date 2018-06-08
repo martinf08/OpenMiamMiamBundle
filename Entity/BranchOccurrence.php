@@ -13,6 +13,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\BranchOccurrence
@@ -28,6 +29,7 @@ class BranchOccurrence
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"occurences"})
      */
     private $id;
 
@@ -45,6 +47,7 @@ class BranchOccurrence
      * @var \DateTime $begin
      *
      * @ORM\Column(name="begin", type="datetime", nullable=false)
+     * @Groups({"occurences"})
      */
     private $begin;
 
@@ -52,6 +55,7 @@ class BranchOccurrence
      * @var \DateTime $end
      *
      * @ORM\Column(name="end", type="datetime", nullable=false)
+     * @Groups({"occurences"})
      */
     private $end;
 

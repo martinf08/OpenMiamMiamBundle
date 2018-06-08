@@ -8,6 +8,7 @@ resources:
         itemOperations: 
             get:
                 method: 'GET' #étrangement obligatoire pour que /api/categories/{id}/childrens fonctionne...
+                # probablement a cause de : Note: By default, API Platform uses the first GET operation defined in itemOperations to generate the IRI of an item and the first GET operation defined in collectionOperations to generate the IRI of a collection.
         collectionOperations:
             api_categories_childrens_get_subresource:
                 swagger_context:
@@ -16,6 +17,22 @@ resources:
                 route_name: 'api_categories_childrens_get_subresource'
                 normalization_context:
                     groups: ['category_children']
+    Isics\Bundle\OpenMiamMiamBundle\Entity\SalesOrder:
+        itemOperations: 
+            place_order:
+                method: 'POST'
+                path: '/sales_orders'
+                normalization_context:
+                    groups: ['order_result']
+                controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\SalesOrder\PostOrder'
+                defaults:
+                    _api_receive: false
+    Isics\Bundle\OpenMiamMiamBundle\Entity\Producer:
+        itemOperations: 
+            get:
+                method: 'GET'
+                normalization_context:
+                    groups: ['producer']
     Isics\Bundle\OpenMiamMiamBundle\Entity\Product:
         itemOperations: 
             get:

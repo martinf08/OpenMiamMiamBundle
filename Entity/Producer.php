@@ -32,7 +32,7 @@ class Producer
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products","producer"})
      */
     private $id;
 
@@ -40,7 +40,7 @@ class Producer
      * @var string $name
      *
      * @ORM\Column(name="name", type="string", length=128, nullable=false, unique=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products","producer"})
      */
     private $name;
 
@@ -49,7 +49,7 @@ class Producer
      *
      * @Gedmo\Slug(fields={"name"})
      * @ORM\Column(name="slug", type="string", length=128, nullable=false, unique=true)
-     * @Groups({"branch_categories_products"})
+     * @Groups({"branch_categories_products","producer"})
      */
     private $slug;
 
@@ -57,6 +57,7 @@ class Producer
      * @var string $presentation
      *
      * @ORM\Column(name="presentation", type="text", nullable=true)
+     * @Groups({"producer"})
      */
     private $presentation;
 
@@ -64,6 +65,7 @@ class Producer
      * @var string $address1
      *
      * @ORM\Column(name="address1", type="string", length=64, nullable=true)
+     * @Groups({"producer"})
      */
     private $address1;
 
@@ -71,6 +73,7 @@ class Producer
      * @var string $address2
      *
      * @ORM\Column(name="address2", type="string", length=64, nullable=true)
+     * @Groups({"producer"})
      */
     private $address2;
 
@@ -78,6 +81,7 @@ class Producer
      * @var string $zipcode
      *
      * @ORM\Column(name="zipcode", type="string", length=8, nullable=true)
+     * @Groups({"producer"})
      */
     private $zipcode;
 
@@ -85,6 +89,7 @@ class Producer
      * @var string $city
      *
      * @ORM\Column(name="city", type="string", length=64, nullable=true)
+     * @Groups({"producer"})
      */
     private $city;
 
@@ -92,6 +97,7 @@ class Producer
      * @var string $phoneNumber1
      *
      * @ORM\Column(name="phone_number1", type="string", length=16, nullable=true)
+     * @Groups({"producer"})
      */
     private $phoneNumber1;
 
@@ -99,6 +105,7 @@ class Producer
      * @var string $phoneNumber2
      *
      * @ORM\Column(name="phone_number2", type="string", length=16, nullable=true)
+     * @Groups({"producer"})
      */
     private $phoneNumber2;
 
@@ -106,6 +113,7 @@ class Producer
      * @var string $website
      *
      * @ORM\Column(name="website", type="string", length=128, nullable=true)
+     * @Groups({"producer"})
      */
     private $website;
 
@@ -113,6 +121,7 @@ class Producer
      * @var string $facebook
      *
      * @ORM\Column(name="facebook", type="string", length=128, nullable=true)
+     * @Groups({"producer"})
      */
     private $facebook;
 
@@ -148,6 +157,7 @@ class Producer
      * @var string $image
      *
      * @ORM\Column(name="profile_image", type="string", length=128, nullable=true)
+     * @Groups({"producer"})
      */
     private $profileImage;
 
@@ -165,6 +175,7 @@ class Producer
      * @var string $presentationImage
      *
      * @ORM\Column(name="presentation_image", type="string", length=128, nullable=true)
+     * @Groups({"producer"})
      */
     private $presentationImage;
 
@@ -189,6 +200,7 @@ class Producer
      * @var string $specialty
      *
      * @ORM\Column(name="specialty", type="string", length=32, nullable=true)
+     * @Groups({"producer"})
      */
     private $specialty;
 

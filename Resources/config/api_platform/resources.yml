@@ -24,6 +24,8 @@ resources:
                 path: '/sales_orders'
                 normalization_context:
                     groups: ['order_result']
+                denormalization_context:
+                    groups: ['order_result']
                 controller: 'Isics\Bundle\OpenMiamMiamBundle\Controller\Api\SalesOrder\PostOrder'
                 defaults:
                     _api_receive: false

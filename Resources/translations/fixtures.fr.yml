@@ -5,6 +5,11 @@ association.friends_of_organic_food: Les amis du bio
 branch.branch1: 'Comptoir #1'
 branch.branch2: 'Comptoir #2'
 
+# CategoryType
+category_type.food:             Alimentaire
+category_type.household:        Produits ménager
+category_type.gardening:        Jardinage
+
 # Category
 category.beef:                  Bœuf
 category.dairy_produce:         Produits laitiers

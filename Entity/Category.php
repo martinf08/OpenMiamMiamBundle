@@ -25,6 +25,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Category
 {
     /**
+     * @ORM\ManyToOne(targetEntity="CategoryType", inversedBy="category")
+     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
+     */
+    private $categoryType;
+    
+    /**
      * @var integer $id
      *
      * @ORM\Column(name="id", type="integer", nullable=false)

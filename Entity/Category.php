@@ -136,6 +136,28 @@ class Category
     }
 
     /**
+     * Set categoryType
+     *
+     * @param int $id
+     */
+    public function setCategoryTypeId($id)
+    {
+        $this->categoryType = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get categoryType
+     *
+     * @return int
+     */
+    public function getCategoryTypeId()
+    {
+        return $this->categoryType;
+    }
+
+    /**
      * Returns string
      */
     public function getIndentedName()

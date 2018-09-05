@@ -25,7 +25,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Category
 {
     /**
-     * @ORM\ManyToOne(targetEntity="CategoryType", inversedBy="category")
+     * @ORM\ManyToOne(targetEntity="CategoryType")
      * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
      */
     private $categoryType;
@@ -140,7 +140,7 @@ class Category
      *
      * @param int $id
      */
-    public function setCategoryTypeId($id)
+    public function setCategoryType($id)
     {
         $this->categoryType = $id;
 

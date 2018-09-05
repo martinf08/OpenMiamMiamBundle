@@ -52,31 +52,37 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
         $fruitsAndVegetables = new Category();
         $fruitsAndVegetables->setName($this->translator->trans('category.fruits_and_vegetables', array(), 'fixtures'));
         $fruitsAndVegetables->setParent($root);
+        $fruitsAndVegetables->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.fruits_and_vegetables', $fruitsAndVegetables);
 
         $dairyProduce = new Category();
         $dairyProduce->setName($this->translator->trans('category.dairy_produce', array(), 'fixtures'));
         $dairyProduce->setParent($root);
+        $dairyProduce->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.dairy_produce', $dairyProduce);
 
         $meat = new Category();
         $meat->setName($this->translator->trans('category.meat', array(), 'fixtures'));
         $meat->setParent($root);
+        $meat->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.meat', $meat);
 
         $beef = new Category();
         $beef->setName($this->translator->trans('category.beef', array(), 'fixtures'));
         $beef->setParent($meat);
+        $beef->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.beef', $beef);
 
         $lamb = new Category();
         $lamb->setName($this->translator->trans('category.lamb', array(), 'fixtures'));
         $lamb->setParent($meat);
+        $lamb->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.lamb', $lamb);
 
         $pork = new Category();
         $pork->setName($this->translator->trans('category.pork', array(), 'fixtures'));
         $pork->setParent($meat);
+        $pork->setCategoryTypeId($this->getReference('category_type.food'));
         $this->addReference('category.pork', $pork);
 
         $manager->persist($root);
@@ -95,6 +101,6 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
      */
     public function getOrder()
     {
-        return 1;
+        return 2;
     }
 }

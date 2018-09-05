@@ -49,7 +49,7 @@ class LoadCategoryTypeData extends AbstractFixture implements OrderedFixtureInte
         foreach (array('food', 'household', 'gardening') as $name) {
             $type = new CategoryType();
             $type->setName($this->translator->trans('category_type.' . $name, array(), 'fixtures'));
-            $this->addReference('category_type.' . $name, $name);
+            $this->addReference('category_type.' . $name, $type);
 
             $manager->persist($type);
         }

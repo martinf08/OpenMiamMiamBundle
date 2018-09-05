@@ -26,7 +26,7 @@ class Category
 {
     /**
      * @ORM\ManyToOne(targetEntity="CategoryType")
-     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id", nullable=false)
      */
     private $categoryType;
     

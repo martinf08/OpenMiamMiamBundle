@@ -85,6 +85,19 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
         $pork->setCategoryType($this->getReference('category_type.food'));
         $this->addReference('category.pork', $pork);
 
+        // NEW CATEGORIES
+        $household = new Category();
+        $household->setName($this->translator->trans('category.household', array(), 'fixtures'));
+        $household->setParent($root);
+        $household->setCategoryType($this->getReference('category_type.household'));
+        $this->addReference('category.household', $household);
+
+        $gardening = new Category();
+        $gardening->setName($this->translator->trans('category.gardening', array(), 'fixtures'));
+        $gardening->setParent($root);
+        $gardening->setCategoryType($this->getReference('category_type.gardening'));
+        $this->addReference('category.gardening', $gardening);
+
         $manager->persist($root);
         $manager->persist($fruitsAndVegetables);
         $manager->persist($dairyProduce);
@@ -92,6 +105,8 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
         $manager->persist($beef);
         $manager->persist($lamb);
         $manager->persist($pork);
+        $manager->persist($household);
+        $manager->persist($gardening);
 
         $manager->flush();
     }

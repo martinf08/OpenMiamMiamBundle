@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * CategoryType
  *
  * @ORM\Table(name="category_type")
- * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Repository\CategoryTypeRepository")
+ * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\CategoryTypeRepository")
  */
 class CategoryType
 {

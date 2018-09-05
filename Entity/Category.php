@@ -152,7 +152,7 @@ class Category
      *
      * @return int
      */
-    public function getCategoryTypeId()
+    public function getCategoryType()
     {
         return $this->categoryType;
     }

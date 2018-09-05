@@ -6,6 +6,7 @@ branch.branch1: 'Comptoir #1'
 branch.branch2: 'Comptoir #2'
 
 # CategoryType
+category_type.none:             Aucun
 category_type.food:             Alimentaire
 category_type.household:        Produits ménager
 category_type.gardening:        Jardinage

@@ -101,8 +101,6 @@ class LoadProductData extends AbstractFixture implements OrderedFixtureInterface
         $product->setAvailability(Product::AVAILABILITY_UNAVAILABLE);
         $productManager->save($product);
 
-        // NEW PRODUCTS
-
         $product = $productManager->createForProducer($this->getReference('producer.beth_rave'));
         $product->setName($this->translator->trans('product.washing-up_liquid', array(), 'fixtures'));
         $product->setCategory($this->getReference('category.household'));

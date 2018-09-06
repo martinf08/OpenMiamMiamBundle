@@ -6,7 +6,6 @@ branch.branch1: 'Comptoir #1'
 branch.branch2: 'Comptoir #2'
 
 # CategoryType
-category_type.none:             Aucun
 category_type.food:             Alimentaire
 category_type.household:        Produits ménager
 category_type.gardening:        Jardinage
@@ -32,5 +31,5 @@ product.plain_yoghurt:        Yahourt nature
 product.fruit_yoghurt:        Yahourt aux fruits
 product.washing-up_liquid:    Liquide vaisselle
 product.soap:                 Savon
-product.fertilizer:           Engrais
+product.compost:              Compost
 product.tomato_seeds:         Graines de tomates

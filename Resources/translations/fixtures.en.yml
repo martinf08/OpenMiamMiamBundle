@@ -6,7 +6,6 @@ branch.branch1: 'Branch #1'
 branch.branch2: 'Branch #2'
 
 # CategoryType
-category_type.none:             None
 category_type.food:             Food
 category_type.household:        Household
 category_type.gardening:        Gardening

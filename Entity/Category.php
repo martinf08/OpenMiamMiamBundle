@@ -24,12 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Category
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="CategoryType")
-     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
-     */
-    private $categoryType;
-    
+
     /**
      * @var integer $id
      *
@@ -38,6 +33,14 @@ class Category
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
+
+    /**
+     * @var CategoryType $categoryType
+     *
+     * @ORM\ManyToOne(targetEntity="CategoryType")
+     * @ORM\JoinColumn(name="category_type_id", referencedColumnName="id")
+     */
+    private $categoryType;
 
     /**
      * @var string $name

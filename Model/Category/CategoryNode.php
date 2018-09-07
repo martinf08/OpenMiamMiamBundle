@@ -59,7 +59,7 @@ class CategoryNode
     /**
      * Set category Type
      *
-     * @param integer $categoryType
+     * @param CategoryType $categoryType
      */
     public function setCategoryType(CategoryType $categoryType)
     {

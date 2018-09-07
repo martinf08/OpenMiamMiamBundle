@@ -13,18 +13,9 @@
 {{ form_start(form, {'attr': {'id': 'open_miam_miam_admin_category_form'}}) }}
 
     {{ form_errors(form) }}
-
-    <div class="row">
-        <div class="col-md-12">
             {{ form_row(form.name, {'label': 'admin.super.category.form.name'|trans}) }}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            {{ form_row(form.categoryType, {'label': 'admin.super.category.form.categoryType'|trans,
-                'placeholder' : 'admin.super.type.default'}) }}
-        </div>
-    </div>
+            {{ form_row(form.categoryType, {'label': 'admin.super.category.form.categoryType'|trans, 'placeholder' : 'admin.super.category.form.category_type.default'|trans}) }}
+
     {% if form.position is defined %}
         <div class="row">
             <div class="col-md-6">

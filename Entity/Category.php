@@ -145,7 +145,7 @@ class Category
      *
      * @return Category
      */
-    public function setCategoryType(CategoryType $categoryType)
+    public function setCategoryType(CategoryType $categoryType = null)
     {
         $this->categoryType = $categoryType;
 

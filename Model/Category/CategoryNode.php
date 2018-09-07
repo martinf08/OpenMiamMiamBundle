@@ -61,7 +61,7 @@ class CategoryNode
      *
      * @param CategoryType $categoryType
      */
-    public function setCategoryType(CategoryType $categoryType)
+    public function setCategoryType(CategoryType $categoryType = null)
     {
         $this->category->setCategoryType($categoryType);
     }

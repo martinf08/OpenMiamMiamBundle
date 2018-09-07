@@ -33,6 +33,8 @@ class CategoryType extends AbstractType
                 ->add('categoryType', EntityType::class, array(
                     'class'         => 'IsicsOpenMiamMiamBundle:CategoryType',
                     'choice_label'  => 'name',
+                    'placeholder' => '',
+                    'required' => false,
                 ));
 
         if (!$options['data']->isRoot()) {

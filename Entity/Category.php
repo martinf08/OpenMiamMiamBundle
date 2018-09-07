@@ -138,11 +138,13 @@ class Category
     /**
      * Set categoryType
      *
-     * @param int $id
+     * @param CategoryType $categoryType
+     *
+     * @return CategoryType
      */
-    public function setCategoryType($id)
+    public function setCategoryType($categoryType)
     {
-        $this->categoryType = $id;
+        $this->categoryType = $categoryType;
 
         return $this;
     }
@@ -150,7 +152,7 @@ class Category
     /**
      * Get categoryType
      *
-     * @return int
+     * @return CategoryType
      */
     public function getCategoryType()
     {

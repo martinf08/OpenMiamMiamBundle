@@ -48,7 +48,6 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
     {
         $root = new Category();
         $root->setName($this->translator->trans('category.root', array(), 'fixtures'));
-        $root->setCategoryType($this->getReference('category_type.none'));
 
         $fruitsAndVegetables = new Category();
         $fruitsAndVegetables->setName($this->translator->trans('category.fruits_and_vegetables', array(), 'fixtures'));
@@ -86,7 +85,6 @@ class LoadCategoryData extends AbstractFixture implements OrderedFixtureInterfac
         $pork->setCategoryType($this->getReference('category_type.food'));
         $this->addReference('category.pork', $pork);
 
-        // NEW CATEGORIES
         $household = new Category();
         $household->setName($this->translator->trans('category.household', array(), 'fixtures'));
         $household->setParent($root);

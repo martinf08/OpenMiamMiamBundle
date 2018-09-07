@@ -140,9 +140,9 @@ class Category
      *
      * @param CategoryType $categoryType
      *
-     * @return CategoryType
+     * @return Category
      */
-    public function setCategoryType($categoryType)
+    public function setCategoryType(CategoryType $categoryType)
     {
         $this->categoryType = $categoryType;
 

@@ -280,4 +280,61 @@ class ProductRepository extends EntityRepository
 
         return $result['counter'];
     }
+
+    /**
+     * Returns a complete list of the most sold products' id for each product
+     * 
+     * @return array
+     */
+    public function getMostAssociatedProducts() {
+        $conn = $this->getDoctrine()->getEntityManager()->getConnection();
+
+        // récupérer tous les product.id uniques
+        $allProducts = 'SELECT product.id FROM product ORDER BY product.id';
+        $stmt1 = $conn->prepare($allProducts);
+        $stmt1->execute();
+        $arrProds = $stmt1->fetchAll();
+
+        // faire boucle de requête sur chaque product
+        $listAssoc = array();
+        foreach($arrProds as $prodId) {
+            $productsInOrders = '
+            SELECT GROUP_CONCAT(p.id) as all_product
+            FROM product p, 
+                sales_order_row sor, 
+                category ct, 
+                category_type ct_t
+            WHERE sor.product_id = p.id
+            AND   ct.id = p.category_id
+            AND   ct_t.id = ct.category_type_id
+            AND   sor.sales_order_id IN (
+                SELECT sales_order_row.sales_order_id
+                FROM sales_order_row
+                WHERE sales_order_row.product_id = :id
+            )
+            AND   sor.product_id <> :id
+            GROUP BY sor.sales_order_id
+            ORDER BY sor.sales_order_id
+            ';
+            $stmt2 = $conn->prepare($productsInOrders);
+            $stmt2->bindParam(':id', $prodId['id']);
+            $stmt2->execute();
+
+            // push les valeurs dans un array
+            $temp = array();
+            foreach($stmt2->fetchAll() as $prods) {
+                array_push($temp, $prods['all_product']);
+            }
+            $listAssoc[$prodId['id']] = explode(',', join(',', $temp));
+        }
+
+        // deuxième boucle pour réduire les résultats par la fréquence de chaque product.id
+        // puis ne conserver que les plus fréquents
+        foreach($listAssoc as $key => $values) {
+            $listAssoc[$key] = array_count_values($listAssoc[$key]); // fréq
+            $listAssoc[$key] = array_keys($listAssoc[$key],max($listAssoc[$key])); // conserver fréq max seulement
+        }
+
+        return $listAssoc;
+    }
 }

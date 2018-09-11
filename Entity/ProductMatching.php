@@ -44,7 +44,7 @@ class ProductAssociation
      * @var Product $firstMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="first_match_product", type="integer")
+     * @ORM\Column(name="first_match_product", type="integer", nullable=true)
      * @ORM\JoinColumn(name="first_match_product", referencedColumnName="id")
      */
     private $firstMatchProduct;

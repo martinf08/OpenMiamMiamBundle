@@ -32,19 +32,11 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $output->writeln([
-            'My Command',
-            '==========',
-            ''
-        ]);
-
         $repository = $this->getContainer()->get('doctrine')
             ->getEntityManager()
-            ->getRepository("IsicsOpenMiamMiamBundle:Product")
-            ->MostAssociatedProducts();
+            ->getRepository("IsicsOpenMiamMiamBundle:ProductMatching")
+            ->updateMatchingProducts();
 
-
-        $output->writeln($repository);
+        $output->writeln('il se passe un truc');
     }
 }

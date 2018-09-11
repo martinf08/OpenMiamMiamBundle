@@ -16,14 +16,14 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListAssociatedProductsCommand extends ContainerAwareCommand
+class UpdateMatchingProductsCommand extends ContainerAwareCommand
 {
     /**
      * @see ContainerAwareCommand
      */
     protected function configure()
     {
-        $this->setName('openmiammiam:list-associated-products')
+        $this->setName('openmiammiam:update-matching-products')
             ->setDescription('Fill table with the most sold product in same orders for every given products');
     }
 

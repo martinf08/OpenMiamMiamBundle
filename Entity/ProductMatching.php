@@ -17,7 +17,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Isics\OpenMiamMiamBundle\Entity\ProductAssociation
  *
- * @ORM\Table(name="product_association")
+ * @ORM\Table(name="product_matches")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductAssociationRepository")
  */
 class ProductAssociation
@@ -53,7 +53,7 @@ class ProductAssociation
      * @var Product $secondMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="second_match_product", type="integer")
+     * @ORM\Column(name="second_match_product", type="integer", nullable=true)
      * @ORM\JoinColumn(name="second_match_product", referencedColumnName="id")
      */
     private $secondMatchProduct;
@@ -62,7 +62,7 @@ class ProductAssociation
      * @var Product $thirdMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="third_match_product", type="integer")
+     * @ORM\Column(name="third_match_product", type="integer", nullable=true)
      * @ORM\JoinColumn(name="third_match_product", referencedColumnName="id")
      */
     private $thirdMatchProduct;

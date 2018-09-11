@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="product_matches")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductAssociationRepository")
  */
-class ProductAssociation
+class ProductMatching
 {
     /**
      * @var integer $id

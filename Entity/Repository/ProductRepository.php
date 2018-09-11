@@ -288,56 +288,40 @@ class ProductRepository extends EntityRepository
      * 
      * @return array
      */
-    public function findOneByMostAssociatedProducts() {
+    public function FindOneByMostAssociatedProducts() {
+
         $conn = $this->getDoctrine()->getEntityManager()->getConnection();
 
-        // récupérer tous les product.id uniques
-        $allProducts = 'SELECT product.id FROM product ORDER BY product.id';
+        // Find all products
+        /*$allProducts = 'SELECT product.id FROM product ORDER BY product.id';
         $stmt1 = $conn->prepare($allProducts);
         $stmt1->execute();
-        $arrProds = $stmt1->fetchAll();
+        $arrProds = $stmt1->fetchAll();*/
 
-        // faire boucle de requête sur chaque product
-        $listAssoc = array();
+        $arrProds = ['68','69','70','71','72','73','74','75','76','77','78','79','80'];
+        $prodList = array();
         foreach($arrProds as $prodId) {
             $productsInOrders = '
-            SELECT GROUP_CONCAT(p.id) as all_product
-            FROM product p, 
-                sales_order_row sor, 
-                category ct, 
-                category_type ct_t
-            WHERE sor.product_id = p.id
-            AND   ct.id = p.category_id
-            AND   ct_t.id = ct.category_type_id
-            AND   sor.sales_order_id IN (
-                SELECT sales_order_row.sales_order_id
-                FROM sales_order_row
-                WHERE sales_order_row.product_id = :id
-            )
-            AND   sor.product_id <> :id
-            GROUP BY sor.sales_order_id
-            ORDER BY sor.sales_order_id
-            ';
+            SELECT sor1.product_id, COUNT(sor1.sales_order_id)
+            FROM sales_order_row AS sor1
+            JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id AND sor2.product_id = :id)
+            WHERE sor1.product_id != :id
+            GROUP BY 1
+            ORDER BY 2 DESC 
+            LIMIT 3';
             $stmt2 = $conn->prepare($productsInOrders);
-            $stmt2->bindParam(':id', $prodId['id']);
+            //$stmt2->bindParam(':id', $prodId['id']);
+            $stmt2->bindParam(':id',$prodId);
             $stmt2->execute();
 
-            // push les valeurs dans un array
-            $temp = array();
-            foreach($stmt2->fetchAll() as $prods) {
-                array_push($temp, $prods['all_product']);
+
+            $allProductsItems = array();
+            foreach ($stmt2->fetchAll() as $productList) {
+                array_push($allProductsItems, $productList['product_id']);
             }
-            $listAssoc[$prodId['id']] = explode(',', join(',', $temp));
+            $prodList[$prodId] = $allProductsItems;
         }
-
-        // deuxième boucle pour réduire les résultats par la fréquence de chaque product.id
-        // puis ne conserver que les plus fréquents
-        foreach($listAssoc as $key => $values) {
-            $listAssoc[$key] = array_count_values($listAssoc[$key]); // fréq
-            $listAssoc[$key] = array_keys($listAssoc[$key],max($listAssoc[$key])); // conserver fréq max seulement
-        }
-
-        return $listAssoc;
+         return $prodList;
     }
     public function FindOneByMessage($message) {
         return $message;

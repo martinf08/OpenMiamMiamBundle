@@ -283,10 +283,12 @@ class ProductRepository extends EntityRepository
 
     /**
      * Returns a complete list of the most sold products' id for each product
+     *
+     * @param null
      * 
      * @return array
      */
-    public function getMostAssociatedProducts() {
+    public function findOneByMostAssociatedProducts() {
         $conn = $this->getDoctrine()->getEntityManager()->getConnection();
 
         // récupérer tous les product.id uniques
@@ -336,5 +338,8 @@ class ProductRepository extends EntityRepository
         }
 
         return $listAssoc;
+    }
+    public function FindOneByMessage($message) {
+        return $message;
     }
 }

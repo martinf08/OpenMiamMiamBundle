@@ -18,7 +18,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Isics\OpenMiamMiamBundle\Entity\ProductAssociation
  *
  * @ORM\Table(name="product_matches")
- * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductAssociationRepository")
+ * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductMatchingRepository")
  */
 class ProductMatching
 {
@@ -32,7 +32,7 @@ class ProductMatching
     private $id;
 
     /**
-     * @var Product $product
+     * @var integer $product
      *
      * @ORM\OneToOne(targetEntity="Product")
      * @ORM\Column(name="product_id", type="integer")
@@ -41,7 +41,7 @@ class ProductMatching
     private $product;
 
     /**
-     * @var Product $firstMatchProduct
+     * @var integer $firstMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\Column(name="first_match_product", type="integer", nullable=true)
@@ -50,7 +50,7 @@ class ProductMatching
     private $firstMatchProduct;
 
     /**
-     * @var Product $secondMatchProduct
+     * @var integer $secondMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\Column(name="second_match_product", type="integer", nullable=true)
@@ -59,7 +59,7 @@ class ProductMatching
     private $secondMatchProduct;
 
     /**
-     * @var Product $thirdMatchProduct
+     * @var integer $thirdMatchProduct
      *
      * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\Column(name="third_match_product", type="integer", nullable=true)
@@ -80,11 +80,11 @@ class ProductMatching
     /**
      * Set product
      *
-     * @param Product $product
+     * @param integer $product
      *
      * @return ProductAssociation
      */
-    public function setProduct(Product $product = null)
+    public function setProduct($product = null)
     {
         $this->product = $product;
 
@@ -104,11 +104,11 @@ class ProductMatching
     /**
      * Set firstMatchProduct
      *
-     * @param Product $firstMatchProduct
+     * @param integer $firstMatchProduct
      *
      * @return ProductAssociation
      */
-    public function setFirstMatchProduct(Product $firstMatchProduct = null)
+    public function setFirstMatchProduct($firstMatchProduct = null)
     {
         $this->firstMatchProduct = $firstMatchProduct;
 
@@ -118,7 +118,7 @@ class ProductMatching
     /**
      * Get firstMatchProduct
      *
-     * @return Product
+     * @return integer
      */
     public function getFirstMatchProduct()
     {
@@ -128,11 +128,11 @@ class ProductMatching
     /**
      * Set secondMatchProduct
      *
-     * @param Product $secondMatchProduct
+     * @param integer $secondMatchProduct
      *
      * @return ProductAssociation
      */
-    public function setSecondMatchProduct(Product $secondMatchProduct = null)
+    public function setSecondMatchProduct($secondMatchProduct = null)
     {
         $this->secondMatchProduct = $secondMatchProduct;
 
@@ -142,7 +142,7 @@ class ProductMatching
     /**
      * Get secondMatchProduct
      *
-     * @return Product
+     * @return integer
      */
     public function getSecondMatchProduct()
     {
@@ -152,11 +152,11 @@ class ProductMatching
     /**
      * Set thirdMatchProduct
      *
-     * @param Product $thirdMatchProduct
+     * @param integer $thirdMatchProduct
      *
      * @return ProductAssociation
      */
-    public function setThirdMatchProduct(Product $thirdMatchProduct = null)
+    public function setThirdMatchProduct($thirdMatchProduct = null)
     {
         $this->thirdMatchProduct = $thirdMatchProduct;
 
@@ -166,7 +166,7 @@ class ProductMatching
     /**
      * Get thirdMatchProduct
      *
-     * @return Product
+     * @return integer
      */
     public function getThirdMatchProduct()
     {

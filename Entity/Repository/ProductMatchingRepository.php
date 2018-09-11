@@ -13,7 +13,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
-class ProductAssociationRepository extends EntityRepository
+class ProductMatchingRepository extends EntityRepository
 {
     
 }

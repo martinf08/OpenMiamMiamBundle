@@ -127,4 +127,18 @@ class CategoryRepository extends NestedTreeRepository
 
         return $result['counter'] > 0;
     }
+
+    /**
+     * Returns list of categories for displaying a category tree
+     * 
+     * @return array 
+     */
+    public function getCategoriesTree()
+    {
+        return $this->getNodesHierarchyQueryBuilder()
+                    ->addSelect('ct')
+                    ->leftJoin('node.categoryType', 'ct')
+                    ->getQuery()
+                    ->getResult();
+    }
 }

@@ -133,7 +133,7 @@ class CategoryRepository extends NestedTreeRepository
      * 
      * @return array 
      */
-    public function getCategoriesTree()
+    public function getNodesHierarchyWithTypes()
     {
         return $this->getNodesHierarchyQueryBuilder()
                     ->addSelect('ct')

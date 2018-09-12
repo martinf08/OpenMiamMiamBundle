@@ -27,7 +27,7 @@ class CategoryController extends Controller
      */
     public function listAction()
     {
-        $categories = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Category')->getCategoriesTree();
+        $categories = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Category')->getNodesHierarchyWithTypes();
 
         return $this->render('IsicsOpenMiamMiamBundle:Admin\Super\Category:list.html.twig', array(
             'categories' => $categories,

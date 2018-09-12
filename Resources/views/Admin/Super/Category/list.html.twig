@@ -34,7 +34,7 @@
                     {% for category in categories %}
                         <tr>
                             <td>
-                                {% if category.categoryType != null %}
+                                {% if category.categoryType %}
                                     {{ category.categoryType.name|capitalize }}
                                 {% else %}
                                      {{ 'admin.super.category.category_type.default'|trans }}

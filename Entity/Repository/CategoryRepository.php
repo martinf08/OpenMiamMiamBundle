@@ -129,7 +129,7 @@ class CategoryRepository extends NestedTreeRepository
     }
 
     /**
-     * Returns list of categories for displaying a category tree
+     * Returns list of categories
      * 
      * @return array 
      */

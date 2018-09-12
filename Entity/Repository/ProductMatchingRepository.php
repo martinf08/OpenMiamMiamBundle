@@ -40,13 +40,20 @@ class ProductMatchingRepository extends EntityRepository
         $prodList = array();
         foreach($arrProds as $prodId) {
             $productsInOrders = '
-                SELECT sor1.product_id, COUNT(sor1.sales_order_id)
+                SELECT sor1.product_id, COUNT(sor1.id) AS frequency
                 FROM sales_order_row AS sor1
                 JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id AND sor2.product_id = :id)
+                JOIN product as p ON p.id = sor1.product_id
+                JOIN category AS cat ON p.category_id = cat.id
+                JOIN category_type AS ctt ON cat.category_type_id = ctt.id
                 WHERE sor1.product_id != :id
+                AND ctt.id = (SELECT category_type.id
+                              FROM product as p
+                              JOIN category ON p.category_id = category.id
+                              JOIN category_type ON category.category_type_id = category_type.id
+                              WHERE p.id = :id)
                 GROUP BY 1
-                ORDER BY 2 DESC 
-                LIMIT 3';
+                ORDER BY 2 DESC';
             $stmt2 = $conn->prepare($productsInOrders);
             $stmt2->bindParam(':id', $prodId['id']);
             $stmt2->execute();

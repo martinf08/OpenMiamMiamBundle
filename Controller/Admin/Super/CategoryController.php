@@ -27,7 +27,10 @@ class CategoryController extends Controller
      */
     public function listAction()
     {
-        $categories = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Category')->getNodesHierarchy();
+        //$categories = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Category')->getNodesHierarchy();
+
+        $categories = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Category')->findBy(array(), array('lft' => 'ASC'));
+        $types = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:CategoryType')->findAll();
 
         return $this->render('IsicsOpenMiamMiamBundle:Admin\Super\Category:list.html.twig', array(
             'categories' => $categories,

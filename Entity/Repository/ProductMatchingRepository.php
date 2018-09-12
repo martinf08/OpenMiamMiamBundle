@@ -40,20 +40,23 @@ class ProductMatchingRepository extends EntityRepository
         $prodList = array();
         foreach($arrProds as $prodId) {
             $productsInOrders = '
-                SELECT sor1.product_id, COUNT(sor1.id) AS frequency
-                FROM sales_order_row AS sor1
-                JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id AND sor2.product_id = :id)
-                JOIN product as p ON p.id = sor1.product_id
-                JOIN category AS cat ON p.category_id = cat.id
-                JOIN category_type AS ctt ON cat.category_type_id = ctt.id
-                WHERE sor1.product_id != :id
-                AND ctt.id = (SELECT category_type.id
-                              FROM product as p
-                              JOIN category ON p.category_id = category.id
-                              JOIN category_type ON category.category_type_id = category_type.id
-                              WHERE p.id = :id)
-                GROUP BY 1
-                ORDER BY 2 DESC';
+                SELECT GROUP_CONCAT(matches.m) as all_matches
+                FROM(
+                    SELECT sor1.product_id AS m, COUNT(sor1.id) AS frequency
+                    FROM sales_order_row AS sor1
+                    JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id AND sor2.product_id = :id)
+                    JOIN product as p ON p.id = sor1.product_id
+                    JOIN category AS cat ON p.category_id = cat.id
+                    JOIN category_type AS ctt ON cat.category_type_id = ctt.id
+                    WHERE sor1.product_id != :id
+                    AND ctt.id = (SELECT category_type.id
+                                FROM product as p
+                                JOIN category ON p.category_id = category.id
+                                JOIN category_type ON category.category_type_id = category_type.id
+                                WHERE p.id = :id)
+                    GROUP BY 1
+                    ORDER BY 2 DESC
+                ) as matches';
             $stmt2 = $conn->prepare($productsInOrders);
             $stmt2->bindParam(':id', $prodId['id']);
             $stmt2->execute();
@@ -68,23 +71,25 @@ class ProductMatchingRepository extends EntityRepository
             $prodMatch = new ProductMatching();
             $prodMatch->setProduct((int)$prodId['id']);
 
-            switch (count($allProductsItems))
-            {
-                case 1:
-                    $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
-                    break;
-                case 2:
-                    $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
-                    $prodMatch->setSecondMatchProduct((int)$allProductsItems[1]);
-                    break;
-                case 3:
-                    $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
-                    $prodMatch->setSecondMatchProduct((int)$allProductsItems[1]);
-                    $prodMatch->setThirdMatchProduct((int)$allProductsItems[2]);
-                    break;
-                default:
-                    break;
-            }
+            // ça c'est à réécrire après avoir réécrit l'entité
+            
+            // switch (count($allProductsItems))
+            // {
+            //     case 1:
+            //         $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
+            //         break;
+            //     case 2:
+            //         $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
+            //         $prodMatch->setSecondMatchProduct((int)$allProductsItems[1]);
+            //         break;
+            //     case 3:
+            //         $prodMatch->setfirstMatchProduct((int)$allProductsItems[0]);
+            //         $prodMatch->setSecondMatchProduct((int)$allProductsItems[1]);
+            //         $prodMatch->setThirdMatchProduct((int)$allProductsItems[2]);
+            //         break;
+            //     default:
+            //         break;
+            // }
             
             $em = $this->getEntityManager();
             $em->persist($prodMatch);

@@ -36,7 +36,5 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
             ->getEntityManager()
             ->getRepository("IsicsOpenMiamMiamBundle:ProductMatching")
             ->updateMatchingProducts();
-
-        $output->writeln('il se passe un truc');
     }
 }

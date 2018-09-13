@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Isics\OpenMiamMiamBundle\Entity\ProductAssociation
+ * Isics\OpenMiamMiamBundle\Entity\ProductMatching
  *
  * @ORM\Table(name="product_matches")
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductMatchingRepository")

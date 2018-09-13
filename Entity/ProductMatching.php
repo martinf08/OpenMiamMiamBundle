@@ -33,39 +33,28 @@ class ProductMatching
 
     /**
      * @var integer $product
-     *
-     * @ORM\OneToOne(targetEntity="Product")
+     * 
+     * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\Column(name="product_id", type="integer")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
     private $product;
 
     /**
-     * @var integer $firstMatchProduct
-     *
+     * @var integer $complementary_product
+     * 
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="first_match_product", type="integer", nullable=true)
-     * @ORM\JoinColumn(name="first_match_product", referencedColumnName="id")
+     * @ORM\Column(name="complementary_product_id", type="integer")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
      */
-    private $firstMatchProduct;
+    private $complementary_product;
 
     /**
-     * @var integer $secondMatchProduct
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="second_match_product", type="integer", nullable=true)
-     * @ORM\JoinColumn(name="second_match_product", referencedColumnName="id")
+     * @var integer $nb_common_orders
+     * 
+     * @ORM\Column(name="nb_common_orders", type="integer")
      */
-    private $secondMatchProduct;
-
-    /**
-     * @var integer $thirdMatchProduct
-     *
-     * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="third_match_product", type="integer", nullable=true)
-     * @ORM\JoinColumn(name="third_match_product", referencedColumnName="id")
-     */
-    private $thirdMatchProduct;
+    private $nb_common_orders;
 
     /**
      * Get id
@@ -80,9 +69,9 @@ class ProductMatching
     /**
      * Set product
      *
-     * @param integer $product
+     * @param Product $product
      *
-     * @return ProductAssociation
+     * @return ProductMatching
      */
     public function setProduct($product = null)
     {
@@ -102,74 +91,50 @@ class ProductMatching
     }
 
     /**
-     * Set firstMatchProduct
+     * Set complementary_produt
      *
-     * @param integer $firstMatchProduct
+     * @param Product $complementary_product
      *
-     * @return ProductAssociation
+     * @return ProductMatching
      */
-    public function setFirstMatchProduct($firstMatchProduct = null)
+    public function setComplementaryProduct($complementary_product = null)
     {
-        $this->firstMatchProduct = $firstMatchProduct;
+        $this->complementary_product = $complementary_product;
 
         return $this;
     }
 
     /**
-     * Get firstMatchProduct
+     * Get complementary_product
      *
-     * @return integer
+     * @return Product
      */
-    public function getFirstMatchProduct()
+    public function getComplementaryProduct()
     {
-        return $this->firstMatchProduct;
+        return $this->complementary_product;
     }
 
     /**
-     * Set secondMatchProduct
+     * Set nb_common_order
      *
-     * @param integer $secondMatchProduct
+     * @param integer $nb_common_orders
      *
-     * @return ProductAssociation
+     * @return integer
      */
-    public function setSecondMatchProduct($secondMatchProduct = null)
+    public function setNbCommonOrders($nb_common_orders = null)
     {
-        $this->secondMatchProduct = $secondMatchProduct;
+        $this->nb_common_orders = $nb_common_orders;
 
         return $this;
     }
 
     /**
-     * Get secondMatchProduct
+     * Get nb_common_orders
      *
      * @return integer
      */
-    public function getSecondMatchProduct()
+    public function getNbCommonOrders()
     {
-        return $this->secondMatchProduct;
-    }
-
-    /**
-     * Set thirdMatchProduct
-     *
-     * @param integer $thirdMatchProduct
-     *
-     * @return ProductAssociation
-     */
-    public function setThirdMatchProduct($thirdMatchProduct = null)
-    {
-        $this->thirdMatchProduct = $thirdMatchProduct;
-
-        return $this;
-    }
-
-    /**
-     * Get thirdMatchProduct
-     *
-     * @return integer
-     */
-    public function getThirdMatchProduct()
-    {
-        return $this->thirdMatchProduct;
+        return $this->nb_common_orders;
     }
 }

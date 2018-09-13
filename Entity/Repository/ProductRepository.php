@@ -285,7 +285,7 @@ class ProductRepository extends EntityRepository
      * Returns a complete list of the most sold products' id for each product
      *
      * @param null
-     * 
+     *
      * @return array
      */
     public function findOneByMostAssociatedProducts() {

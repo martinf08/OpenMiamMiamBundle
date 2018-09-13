@@ -100,6 +100,12 @@ class CatalogController extends Controller
             ), 301);
         }
 
+        
+
+        $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->getMostAssociatedProducts();
+
+
+
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProduct.html.twig', array(
             'branch'  => $branch,
             'product' => $product,

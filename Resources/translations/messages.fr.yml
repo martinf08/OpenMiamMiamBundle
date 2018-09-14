@@ -31,7 +31,8 @@ New payment:          "Nouveau règlement"
 Amount:               "Montant"
 Type:                 "Moyen de règlement"
 
-
+# Category Type
+category_type.default:     "Défaut"
 
 # Hompage
 homepage.map.title:        "Choisissez le lieu de distribution près de chez vous :"

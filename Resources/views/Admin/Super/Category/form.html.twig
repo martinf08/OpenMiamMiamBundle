@@ -14,7 +14,7 @@
 
     {{ form_errors(form) }}
     {{ form_row(form.name, {'label': 'admin.super.category.form.name'|trans}) }}
-    {{ form_row(form.categoryType, {'label': 'admin.super.category.form.category_type'|trans, 'placeholder' : 'admin.super.category.category_type.default'|trans}) }}
+    {{ form_row(form.categoryType, {'label': 'admin.super.category.form.category_type'|trans, 'placeholder' : 'category_type.default'|trans}) }}
 
     {% if form.position is defined %}
         <div class="row">

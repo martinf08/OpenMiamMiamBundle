@@ -32,14 +32,14 @@ class ProductMatchingRepository extends EntityRepository
         $truncate->execute();
 
         // Find all products
-        //$productsQuery = $em->createQuery('SELECT p.id FROM IsicsOpenMiamMiamBundle:Product p ORDER BY p.id');
         $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
                             ->createQueryBuilder('p')
-                            //->setFirstResult(70)
-                            //->setMaxResults(30)
+                            // ->setFirstResult(76)
+                            // ->setMaxResults(8)
                             ->getquery();
 
         $allProducts = $productsQuery->getResult();
+
         // Fill the product_matches table
         foreach($allProducts as $product)
         {

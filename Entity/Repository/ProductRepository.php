@@ -282,64 +282,23 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Returns a complete list of the most sold products' id for each product
+     * Returns an array of Products
      *
-     * @param null
+     * @param Product $product
+     * @param Branch $branch
      *
      * @return array
      */
-    public function findOneByMostAssociatedProducts() {
-        $conn = $this->getDoctrine()->getEntityManager()->getConnection();
-
-        // récupérer tous les product.id uniques
-        $allProducts = 'SELECT product.id FROM product ORDER BY product.id';
-        $stmt1 = $conn->prepare($allProducts);
-        $stmt1->execute();
-        $arrProds = $stmt1->fetchAll();
-
-        // faire boucle de requête sur chaque product
-        $listAssoc = array();
-        foreach($arrProds as $prodId) {
-            $productsInOrders = '
-            SELECT GROUP_CONCAT(p.id) as all_product
-            FROM product p, 
-                sales_order_row sor, 
-                category ct, 
-                category_type ct_t
-            WHERE sor.product_id = p.id
-            AND   ct.id = p.category_id
-            AND   ct_t.id = ct.category_type_id
-            AND   sor.sales_order_id IN (
-                SELECT sales_order_row.sales_order_id
-                FROM sales_order_row
-                WHERE sales_order_row.product_id = :id
-            )
-            AND   sor.product_id <> :id
-            GROUP BY sor.sales_order_id
-            ORDER BY sor.sales_order_id
-            ';
-            $stmt2 = $conn->prepare($productsInOrders);
-            $stmt2->bindParam(':id', $prodId['id']);
-            $stmt2->execute();
-
-            // push les valeurs dans un array
-            $temp = array();
-            foreach($stmt2->fetchAll() as $prods) {
-                array_push($temp, $prods['all_product']);
-            }
-            $listAssoc[$prodId['id']] = explode(',', join(',', $temp));
-        }
-
-        // deuxième boucle pour réduire les résultats par la fréquence de chaque product.id
-        // puis ne conserver que les plus fréquents
-        foreach($listAssoc as $key => $values) {
-            $listAssoc[$key] = array_count_values($listAssoc[$key]); // fréq
-            $listAssoc[$key] = array_keys($listAssoc[$key],max($listAssoc[$key])); // conserver fréq max seulement
-        }
-
-        return $listAssoc;
-    }
-    public function FindOneByMessage($message) {
-        return $message;
+    public function findMatchingProducts(Product $product, Branch $branch) 
+    {
+        return $qb = $this->createQueryBuilder('p')
+                   ->select('pm.product as p_id', 'pm.complementary_product as complem_id', 'pm.nb_common_orders as nb')
+                   ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
+                   ->join('p.branches', 'br', 'WITH', 'pm.complementary_product = br.products')
+                   ->where('pm.product = :id')
+                   ->andWhere('br.products = :br')
+                   ->setParameter('id', $product->getId())
+                   ->setParameter('br', $branch->getId())
+                   ->getQuery()->getResult();
     }
 }

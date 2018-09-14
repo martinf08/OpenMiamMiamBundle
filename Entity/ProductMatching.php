@@ -45,7 +45,7 @@ class ProductMatching
      * 
      * @ORM\ManyToOne(targetEntity="Product")
      * @ORM\Column(name="complementary_product_id", type="integer")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="complementary_product_id", referencedColumnName="id")
      */
     private $complementary_product;
 

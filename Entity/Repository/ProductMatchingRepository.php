@@ -35,6 +35,8 @@ class ProductMatchingRepository extends EntityRepository
         $allProducts = $productsQuery->getResult();
 
         // Fill the product_matches table
+        $i = 0;
+
         foreach($allProducts as $product)
         {
             $id = $product->getId();
@@ -79,7 +81,13 @@ class ProductMatchingRepository extends EntityRepository
                 $em->persist($prodMatch);
             }
 
-            $em->flush();
+            $i++;
+
+            if ($i <= 100)
+            {
+                $em->flush();
+                $i = 0;
+            }
         }
     }
 }

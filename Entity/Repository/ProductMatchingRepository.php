@@ -32,51 +32,50 @@ class ProductMatchingRepository extends EntityRepository
         $truncate->execute();
 
         // Find all products
-        $productsQuery = $em->createQuery('SELECT p.id FROM IsicsOpenMiamMiamBundle:Product p ORDER BY p.id');
+        $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
+                            ->createQueryBuilder('p')
+                            // ->setFirstResult(75)
+                            // ->setMaxResults(3)
+                            ->getQuery();
+
         $allProducts = $productsQuery->getResult();
 
         // Fill the product_matches table
+
         foreach($allProducts as $product)
         {
-            $id = $product['id'];
+            $id = $product->getId();
 
             $query = $em->getRepository('IsicsOpenMiamMiamBundle:SalesOrderRow');
-            $subquery = $em->getRepository('IsicsOpenMiamMiamBundle:Product');
 
-            $subQueryStmt = $subquery->createQueryBuilder('p')
-                                     ->select('ctt.id')
-                                     ->join('p.category', 'cat')
-                                     ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt', 'WITH', 'cat.categoryType = ctt.id')
-                                     ->where('p.id = :productId')
-                                     ->setParameter('productId', $id)
-                                     ->getQuery()
-                                     ->getResult();
+            $allProductsMatches = $query->createQueryBuilder('sor1')
+                                        ->select('IDENTITY(sor1.product) as complementary_product', 'COUNT(sor1.id) as nb_common_orders')
+                                        ->join('IsicsOpenMiamMiamBundle:SalesOrderRow', 'sor2', 'WITH', 'sor1.salesOrder = sor2.salesOrder')
+                                        ->join('sor1.product', 'p1')
+                                        ->join('p1.category', 'cat1')
+                                        ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt1', 'WITH', 'cat1.categoryType = ctt1.id')
 
-            if (array_key_exists(0, $subQueryStmt)) 
+                                        ->join('sor2.product', 'p2')
+                                        ->join('p2.category', 'cat2')
+                                        ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt2', 'WITH', 'cat2.categoryType = ctt2.id')
+
+                                        ->where('sor1.product != :productId')
+                                        ->andWhere('sor2.product = :productId')
+
+                                        ->andWhere('ctt1.id = ctt2.id')
+                                        ->groupBy('sor1.product')
+                                        ->addOrderBy('nb_common_orders', 'DESC')
+                                        ->setParameter('productId', $id)
+                                        ->getQuery()->getResult();
+
+            foreach($allProductsMatches as $match)
             {
-                $allProductsMatches = $query->createQueryBuilder('sor1')
-                                            ->select( 'IDENTITY(sor1.product) as complementary_product', 'COUNT(sor1.id) as nb_common_orders')
-                                            ->join('IsicsOpenMiamMiamBundle:SalesOrderRow', 'sor2', 'WITH', 'sor1.salesOrder = sor2.salesOrder')
-                                            ->join('sor1.product', 'p')
-                                            ->join('p.category', 'cat')
-                                            ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt', 'WITH', 'cat.categoryType = ctt.id')
-                                            ->where('sor1.product != :productId')
-                                            ->andWhere('sor2.product = :productId')
-                                            ->andWhere('ctt.id ='. $subQueryStmt[0]['id'])
-                                            ->groupBy('sor1.product')
-                                            ->orderBy('nb_common_orders', 'DESC')
-                                            ->setParameter('productId', $id)
-                                            ->getQuery()->getResult();
-
-                foreach($allProductsMatches as $match)
-                {
-                    $prodMatch = new ProductMatching();
-                    $prodMatch->setProduct((int)$id);
-                    $prodMatch->setComplementaryProduct((int)$match['complementary_product']);
-                    $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
-                    $em->persist($prodMatch);
-                    $em->flush();
-                }
+                $prodMatch = new ProductMatching();
+                $prodMatch->setProduct((int)$id);
+                $prodMatch->setComplementaryProduct((int)$match['complementary_product']);
+                $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
+                $em->persist($prodMatch);
+                $em->flush();
             }
         }
     }

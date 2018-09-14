@@ -26,25 +26,28 @@ class ProductMatchingRepository extends EntityRepository
 
         $em = $this->getEntityManager();
 
-        // Purge the table
-        $conn = $em->getConnection();
-        $truncate = $conn->prepare('TRUNCATE TABLE product_matches');
-        $truncate->execute();
-
         // Find all products
         $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
                             ->createQueryBuilder('p')
-                            // ->setFirstResult(75)
-                            // ->setMaxResults(3)
+                            ->setFirstResult(50)
+                            ->setMaxResults(50)
                             ->getQuery();
 
         $allProducts = $productsQuery->getResult();
 
         // Fill the product_matches table
-
         foreach($allProducts as $product)
         {
             $id = $product->getId();
+
+            // Delete previous entries
+            $deleteMatches = $em->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')
+                                ->createQueryBuilder('pm')
+                                ->delete('pm')
+                                ->where('pm.product = :productId')
+                                ->setParameter('productId', $id)
+                                ->getQuery()
+                                ->execute();
 
             $query = $em->getRepository('IsicsOpenMiamMiamBundle:SalesOrderRow');
 
@@ -75,8 +78,9 @@ class ProductMatchingRepository extends EntityRepository
                 $prodMatch->setComplementaryProduct((int)$match['complementary_product']);
                 $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
                 $em->persist($prodMatch);
-                $em->flush();
             }
+
+            $em->flush();
         }
     }
 }

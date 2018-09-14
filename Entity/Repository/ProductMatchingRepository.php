@@ -29,8 +29,7 @@ class ProductMatchingRepository extends EntityRepository
         // Find all products
         $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
                             ->createQueryBuilder('p')
-                            ->setFirstResult(50)
-                            ->setMaxResults(50)
+                            ->orderBy('p.id')
                             ->getQuery();
 
         $allProducts = $productsQuery->getResult();
@@ -43,7 +42,7 @@ class ProductMatchingRepository extends EntityRepository
             // Delete previous entries
             $deleteMatches = $em->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')
                                 ->createQueryBuilder('pm')
-                                ->delete('pm')
+                                ->delete(ProductMatching::class, 'pm')
                                 ->where('pm.product = :productId')
                                 ->setParameter('productId', $id)
                                 ->getQuery()

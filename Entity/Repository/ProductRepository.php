@@ -294,9 +294,10 @@ class ProductRepository extends EntityRepository
         return $qb = $this->createQueryBuilder('p')
                    ->select('pm.product as p_id', 'pm.complementary_product as complem_id', 'pm.nb_common_orders as nb')
                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
-                   ->join('p.branches', 'br', 'WITH', 'pm.complementary_product = br.products')
+                   ->join('p.branches', 'br')
                    ->where('pm.product = :id')
-                   ->andWhere('br.products = :br')
+                   ->andWhere('p.availability = 3')
+                   ->andWhere('br.id = :br')
                    ->setParameter('id', $product->getId())
                    ->setParameter('br', $branch->getId())
                    ->getQuery()->getResult();

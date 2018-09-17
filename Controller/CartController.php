@@ -90,6 +90,43 @@ class CartController extends Controller
             $violationMapper->mapViolation($error, $form);
         }
 
+        
+        // Save the indexes of products present in the cart
+        $cartIndexes = array();
+        foreach ($cart->getItems() as $item)
+            array_push($cartIndexes, $item->getProductId());
+
+        $cartMatches = array();
+        $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
+        foreach ($cart->getItems() as $item) {
+            $product = $repository->findOneByIdAndVisibleInBranch($item->getProductId(), $branch);
+            $matchingProducts = $repository->findMatchingProductsInfos($product, $branch);
+
+            // Keep only the matching products not present in the cart
+            $differentMatchingProducts = array();
+            foreach ($matchingProducts as $match) {
+                if (!in_array($match->getComplementaryProduct(), $cartIndexes))
+                    array_push($differentMatchingProducts, $match);
+            }
+
+            // Keep only 3 of them
+            if (count($differentMatchingProducts) > 3)
+                $differentMatchingProducts = array_slice($differentMatchingProducts, 0, 3);
+
+            if (!empty($differentMatchingProducts)) {
+                foreach ($differentMatchingProducts as $diffMatch)
+                array_push($cartMatches, $diffMatch);
+            }
+        }
+
+        // Keep the 3 most ordered matching products of all the matches for the cart
+        usort($cartMatches, function($a, $b) {
+            if ($a == $b)
+                return 0;
+            return ($a < $b) ? -1 : 1;
+        });
+        $cartMatches = array_slice($cartMatches, 0, 3);
+
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,

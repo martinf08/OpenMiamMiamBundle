@@ -93,10 +93,8 @@ class CatalogController extends Controller
             foreach ($matchingProducts as $matchingProduct) {
                 $productAvailability = $branchOccurrenceManager->getProductAvailabilityForNext($branch, $matchingProduct);
                 if (count($availableMatchingProducts) < 3) {
-                    if ($productAvailability->getReason() == 0 || $productAvailability->getReason() == 1) {
+                    if ($productAvailability->getReason() == 0 || $productAvailability->getReason() == 1)
                         array_push($availableMatchingProducts, $matchingProduct);
-
-                    }
                 }
             }
         }

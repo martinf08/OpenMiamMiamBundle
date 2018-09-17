@@ -298,6 +298,7 @@ class ProductRepository extends EntityRepository
                    ->where('pm.product = :id')
                    ->andWhere('p.availability = 3')
                    ->andWhere('br.id = :br')
+                   ->setMaxResults(3)
                    ->setParameter('id', $product->getId())
                    ->setParameter('br', $branch->getId())
                    ->getQuery()->getResult();

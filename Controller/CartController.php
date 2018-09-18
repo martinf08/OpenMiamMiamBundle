@@ -119,18 +119,35 @@ class CartController extends Controller
             }
         }
 
-        // Keep the 3 most ordered matching products of all the matches for the cart
+        // Sort by most ordered
         usort($cartMatches, function($a, $b) {
-            if ($a == $b)
+            if ($a->getNbCommonOrders() == $b->getNbCommonOrders())
                 return 0;
-            return ($a < $b) ? -1 : 1;
+            return ($a->getNbCommonOrders() > $b->getNbCommonOrders()) ? -1 : 1;
         });
-        $cartMatches = array_slice($cartMatches, 0, 3);
+
+        // Convert ProductMatching array to Product array
+        for ($i = 0; $i < count($cartMatches); $i++)
+            $cartMatches[$i] = $repository->findOneByIdAndVisibleInBranch($cartMatches[$i]->getComplementaryProduct(), $branch);
+
+        // Keep only products available for the next occurence
+        $branchOccurrenceManager = $this->container->get('open_miam_miam.branch_occurrence_manager');
+        $availableMatchingProducts = array();
+        if (isset($cartMatches) && !empty($cartMatches)) {
+            foreach ($cartMatches as $cartMatch) {
+                $productAvailability = $branchOccurrenceManager->getProductAvailabilityForNext($branch, $cartMatch);
+                if (count($availableMatchingProducts) < 3) {
+                    if ($productAvailability->getReason() == 0 || $productAvailability->getReason() == 1)
+                        array_push($availableMatchingProducts, $cartMatch);
+                }
+            }
+        }
 
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,
             'form'   => $form->createView(),
+            'matches'=> $availableMatchingProducts,
         ));
     }
 

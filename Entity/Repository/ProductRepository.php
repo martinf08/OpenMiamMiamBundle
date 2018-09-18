@@ -20,6 +20,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\BranchOccurrence;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Category;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Producer;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
+use Isics\Bundle\OpenMiamMiamUserBundle\Entity\User;
 
 class ProductRepository extends EntityRepository
 {
@@ -279,5 +280,33 @@ class ProductRepository extends EntityRepository
                 ->getSingleResult();
 
         return $result['counter'];
+    }
+
+    /**
+     * Return products buy by user for two or more times
+     *
+     * @param User $user
+     * @param Branch $Branch
+     *
+     * @return array
+     */
+    public function countProductsFrequenceBuy()
+    {
+        $em = $this->getEntityManager();
+        $query = $em->getRepository('IsicsOpenMiamMiamUserBundle:User');
+        return $query->createQueryBuilder('u')
+                ->select('u as user', 'p.name as product_name', 'COUNT(sor.product) as Frequency' )
+                ->join('IsicsOpenMiamMiamBundle:SalesOrder', 'so', 'WITH', 'so.user = u.id')
+                ->join('so.salesOrderRows','sor')
+                ->join('sor.product', 'p')
+                ->join('p.branches', 'br')
+                ->where('u.id = 538')
+                ->andWhere('br.id = 1')
+                ->groupBy('p.name')
+                ->having('Frequency > 2')
+                ->getQuery()
+                ->getResult();
+
+
     }
 }

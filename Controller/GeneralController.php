@@ -28,6 +28,10 @@ class GeneralController extends Controller
     {
         $branchesWithNbProducers = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Branch')->findWithProducersCount();
 
+
+       //$test = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->countProductsFrequenceBuy();
+       //dump($test);
+      // die();
         return $this->render('IsicsOpenMiamMiamBundle::showHomepage.html.twig', array(
             'branchesWithNbProducers' => $branchesWithNbProducers,
         ));

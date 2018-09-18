@@ -292,13 +292,12 @@ class ProductRepository extends EntityRepository
     public function findMatchingProducts(Product $product, Branch $branch) 
     {
         return $qb = $this->createQueryBuilder('p')
-                   ->select('pm.product as p_id', 'pm.complementary_product as complem_id', 'pm.nb_common_orders as nb')
+                   ->select('p')
                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
                    ->join('p.branches', 'br')
                    ->where('pm.product = :id')
                    ->andWhere('p.availability = 3')
                    ->andWhere('br.id = :br')
-                   ->setMaxResults(3)
                    ->setParameter('id', $product->getId())
                    ->setParameter('br', $branch->getId())
                    ->getQuery()->getResult();

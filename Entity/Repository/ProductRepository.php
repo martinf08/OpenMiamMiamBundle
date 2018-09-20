@@ -282,14 +282,14 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Returns an array of Products
+     * Returns an array of products complementary to a given product
      *
      * @param Product $product
      * @param Branch $branch
      *
      * @return array
      */
-    public function findMatchingProducts(Product $product, Branch $branch) 
+    public function findMatchingProducts(Product $product, Branch $branch, $cartItems = null) 
     {
         $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
                             ->createQueryBuilder('bocc2')
@@ -299,8 +299,7 @@ class ProductRepository extends EntityRepository
                             ->setParameter('br', $branch->getId())
                             ->getDQL();
       
-        return $qb = 
-               $this->createQueryBuilder('p')
+        $qb =  $this->createQueryBuilder('p')
                     ->select('p')
                     ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
                     ->join('p.branches', 'br')
@@ -317,11 +316,18 @@ class ProductRepository extends EntityRepository
                     ->andWhere(
                         $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
                              ->expr()->in('bocc.begin', $nextBranchQ)
-                    )
-                    ->setParameter('id', $product->getId())
-                    ->setParameter('br', $branch->getId())
-                    ->setMaxResults(3)
-                    ->getQuery()->getResult();
+                    );
+
+        if ($cartItems) {
+            $qb->andWhere($qb->expr()->notIn('pm.complementary_product', ':items'))
+               ->setParameter('items', $cartItems);
+        }
+
+        $qb->setParameter('id', $product->getId())
+           ->setParameter('br', $branch->getId())
+           ->setMaxResults(3);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

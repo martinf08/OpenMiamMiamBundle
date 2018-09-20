@@ -320,6 +320,7 @@ class ProductRepository extends EntityRepository
                     )
                     ->setParameter('id', $product->getId())
                     ->setParameter('br', $branch->getId())
+                    ->setMaxResults(3)
                     ->getQuery()->getResult();
     }
 

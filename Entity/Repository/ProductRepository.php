@@ -282,14 +282,14 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Returns an array of products complementary to a given product
+     * Returns an array of products complementary
      *
      * @param Product $product
      * @param Branch $branch
      *
      * @return array
      */
-    public function findMatchingProducts(Product $product, Branch $branch, $cartItems = null) 
+    public function findMatchingProducts(Product $product, Branch $branch)
     {
         $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
                             ->createQueryBuilder('bocc2')
@@ -298,16 +298,17 @@ class ProductRepository extends EntityRepository
                             ->andWhere('bocc2.branch = :br')
                             ->setParameter('br', $branch->getId())
                             ->getDQL();
-      
-        $qb =  $this->createQueryBuilder('p')
+
+        return $qb =
+               $this->createQueryBuilder('p')
                     ->select('p')
                     ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
                     ->join('p.branches', 'br')
-                    
+
                     ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
                     ->join('p.producer', 'prcd')
                     ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
-                    
+
                     ->where('pm.product = :id')
                     ->andWhere('br.id = :br')
                     ->andWhere('p.availability = 3')
@@ -316,18 +317,11 @@ class ProductRepository extends EntityRepository
                     ->andWhere(
                         $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
                              ->expr()->in('bocc.begin', $nextBranchQ)
-                    );
-
-        if ($cartItems) {
-            $qb->andWhere($qb->expr()->notIn('pm.complementary_product', ':items'))
-               ->setParameter('items', $cartItems);
-        }
-
-        $qb->setParameter('id', $product->getId())
-           ->setParameter('br', $branch->getId())
-           ->setMaxResults(3);
-
-        return $qb->getQuery()->getResult();
+                    )
+                    ->setParameter('id', $product->getId())
+                    ->setParameter('br', $branch->getId())
+                    ->setMaxResults(3)
+                    ->getQuery()->getResult();
     }
 
     /**

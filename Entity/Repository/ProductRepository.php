@@ -291,16 +291,36 @@ class ProductRepository extends EntityRepository
      */
     public function findMatchingProducts(Product $product, Branch $branch) 
     {
-        return $qb = $this->createQueryBuilder('p')
-                   ->select('p')
-                   ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
-                   ->join('p.branches', 'br')
-                   ->where('pm.product = :id')
-                   ->andWhere('p.availability = 3')
-                   ->andWhere('br.id = :br')
-                   ->setParameter('id', $product->getId())
-                   ->setParameter('br', $branch->getId())
-                   ->getQuery()->getResult();
+        $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
+                            ->createQueryBuilder('bocc2')
+                            ->select('MIN(bocc2.begin)')
+                            ->where('bocc2.begin > CURRENT_TIMESTAMP()')
+                            ->andWhere('bocc2.branch = :br')
+                            ->setParameter('br', $branch->getId())
+                            ->getDQL();
+      
+        return $qb = 
+               $this->createQueryBuilder('p')
+                    ->select('p')
+                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
+                    ->join('p.branches', 'br')
+                    
+                    ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
+                    ->join('p.producer', 'prcd')
+                    ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
+                    
+                    ->where('pm.product = :id')
+                    ->andWhere('br.id = :br')
+                    ->andWhere('p.availability = 3')
+                    ->andWhere('pa.isAttendee = 1')
+                    ->andWhere('pa.branchOccurrence = bocc.id')
+                    ->andWhere(
+                        $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
+                             ->expr()->in('bocc.begin', $nextBranchQ)
+                    )
+                    ->setParameter('id', $product->getId())
+                    ->setParameter('br', $branch->getId())
+                    ->getQuery()->getResult();
     }
 
     /**

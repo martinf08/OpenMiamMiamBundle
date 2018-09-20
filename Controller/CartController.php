@@ -89,65 +89,42 @@ class CartController extends Controller
         foreach ($errors as $error) {
             $violationMapper->mapViolation($error, $form);
         }
-
         
-        // Save the indexes of products present in the cart
-        $cartIndexes = array();
-        foreach ($cart->getItems() as $item)
-            array_push($cartIndexes, $item->getProductId());
-
-        $cartMatches = array();
         $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
+        $listOfProductMatchingByCartItems = array();
+        $listOfIdInCart = array();
         foreach ($cart->getItems() as $item) {
-            $product = $repository->findOneByIdAndVisibleInBranch($item->getProductId(), $branch);
-            $matchingProducts = $repository->findMatchingProductsInfos($product, $branch);
+            $listOfProductMatchingByCartItems = array_merge($listOfProductMatchingByCartItems, $repository->findMatchingProducts($item->getProduct(), $branch));
+            array_push($listOfIdInCart, $item->getProductId());
+        }
 
-            // Keep only the matching products not present in the cart
-            $differentMatchingProducts = array();
-            foreach ($matchingProducts as $match) {
-                if (!in_array($match->getComplementaryProduct(), $cartIndexes))
-                    array_push($differentMatchingProducts, $match);
-            }
-
-            // Keep only 3 of them
-            if (count($differentMatchingProducts) > 3)
-                $differentMatchingProducts = array_slice($differentMatchingProducts, 0, 3);
-
-            if (!empty($differentMatchingProducts)) {
-                foreach ($differentMatchingProducts as $diffMatch)
-                array_push($cartMatches, $diffMatch);
+        foreach ($listOfProductMatchingByCartItems as $key => $productsMatchingItems) {
+            foreach ($listOfIdInCart as  $idOfCartItem) {
+                if ($idOfCartItem  == $productsMatchingItems->getId()){
+                    unset($listOfProductMatchingByCartItems[$key]);
+                }
             }
         }
 
-        // Sort by most ordered
-        usort($cartMatches, function($a, $b) {
-            if ($a->getNbCommonOrders() == $b->getNbCommonOrders())
-                return 0;
-            return ($a->getNbCommonOrders() > $b->getNbCommonOrders()) ? -1 : 1;
-        });
+        $productsMatching = array();
+        foreach ($listOfProductMatchingByCartItems as $productMatchingByCartItem) {
+            array_push($productsMatching, $productMatchingByCartItem->getId());
+        }
 
-        // Convert ProductMatching array to Product array
-        for ($i = 0; $i < count($cartMatches); $i++)
-            $cartMatches[$i] = $repository->findOneByIdAndVisibleInBranch($cartMatches[$i]->getComplementaryProduct(), $branch);
+        $countProducts = array_count_values($productsMatching);
+        arsort($countProducts);
 
-        // Keep only products available for the next occurence
-        $branchOccurrenceManager = $this->container->get('open_miam_miam.branch_occurrence_manager');
-        $availableMatchingProducts = array();
-        if (isset($cartMatches) && !empty($cartMatches)) {
-            foreach ($cartMatches as $cartMatch) {
-                $productAvailability = $branchOccurrenceManager->getProductAvailabilityForNext($branch, $cartMatch);
-                if (count($availableMatchingProducts) < 3) {
-                    if ($productAvailability->getReason() == 0 || $productAvailability->getReason() == 1)
-                        array_push($availableMatchingProducts, $cartMatch);
-                }
-            }
+        $finalProductsMatching = array();
+
+        foreach ($countProducts as $id => $value) {
+            array_push($finalProductsMatching, $repository->findOneByIdAndVisibleInBranch($id, $branch));
         }
 
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,
             'form'   => $form->createView(),
-            'matches'=> $availableMatchingProducts,
+         'matches'=> $finalProductsMatching,
         ));
     }
 

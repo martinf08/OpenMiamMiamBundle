@@ -323,26 +323,4 @@ class ProductRepository extends EntityRepository
                     ->setMaxResults(3)
                     ->getQuery()->getResult();
     }
-
-    /**
-     * Returns an array of info on matching products
-     *
-     * @param Product $product
-     * @param Branch $branch
-     *
-     * @return array
-     */
-    public function findMatchingProductsInfos(Product $product, Branch $branch) 
-    {
-        return $qb = $this->createQueryBuilder('p')
-                   ->select('pm')
-                   ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.complementary_product = p.id')
-                   ->join('p.branches', 'br')
-                   ->where('pm.product = :id')
-                   ->andWhere('p.availability = 3')
-                   ->andWhere('br.id = :br')
-                   ->setParameter('id', $product->getId())
-                   ->setParameter('br', $branch->getId())
-                   ->getQuery()->getResult();
-    }
 }

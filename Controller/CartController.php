@@ -89,7 +89,7 @@ class CartController extends Controller
         foreach ($errors as $error) {
             $violationMapper->mapViolation($error, $form);
         }
-        
+
         $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
         $listOfProductMatchingByCartItems = array();
         $listOfIdInCart = array();
@@ -119,6 +119,7 @@ class CartController extends Controller
         foreach ($countProducts as $id => $value) {
             array_push($finalProductsMatching, $repository->findOneByIdAndVisibleInBranch($id, $branch));
         }
+        $finalProductsMatching = array_slice($finalProductsMatching,0, 3);
 
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,

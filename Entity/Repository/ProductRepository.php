@@ -283,14 +283,14 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Return products buy by user for two or more times
+     * Return products bought by the user at least twice
      *
      * @param User $user
      * @param Branch $Branch
      *
      * @return array
      */
-    public function countProductsFrequenceBuy()
+    public function findFrequentPurchases()
     {
         $em = $this->getEntityManager();
         $query = $em->getRepository('IsicsOpenMiamMiamUserBundle:User');

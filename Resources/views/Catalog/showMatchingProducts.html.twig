@@ -9,13 +9,11 @@
     <div class="col-md-12">
         {% if product is defined %}
             <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
-        {% else %}
-            {% if matches is not empty %}
-                {% if cart.nbItems is defined and cart.nbItems > 2  %}
-                    <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
-                {% elseif cart.nbItem < 2 %}
-                    <h2>Les clients qui ont acheté ces produits ont également acheté :</h2>
-                {% endif %}
+        {% else if matches is not empty %}
+            {% if cart.nbItems is defined and cart.nbItems > 1  %}
+                <h2>Les clients qui ont acheté ces produits ont également acheté :</h2>
+            {% elseif cart.nbItem == 1 %}
+                <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
             {% endif %}
         {% endif %}
     </div>

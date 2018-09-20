@@ -100,32 +100,30 @@ class CartController extends Controller
 
         foreach ($listOfProductMatchingByCartItems as $key => $productsMatchingItems) {
             foreach ($listOfIdInCart as  $idOfCartItem) {
-                if ($idOfCartItem  == $productsMatchingItems->getId()){
+                if ($idOfCartItem  == $productsMatchingItems->getId())
                     unset($listOfProductMatchingByCartItems[$key]);
-                }
             }
         }
 
         $productsMatching = array();
-        foreach ($listOfProductMatchingByCartItems as $productMatchingByCartItem) {
+        foreach ($listOfProductMatchingByCartItems as $productMatchingByCartItem)
             array_push($productsMatching, $productMatchingByCartItem->getId());
-        }
 
         $countProducts = array_count_values($productsMatching);
         arsort($countProducts);
 
         $finalProductsMatching = array();
 
-        foreach ($countProducts as $id => $value) {
+        foreach ($countProducts as $id => $value)
             array_push($finalProductsMatching, $repository->findOneByIdAndVisibleInBranch($id, $branch));
-        }
+
         $finalProductsMatching = array_slice($finalProductsMatching,0, 3);
 
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,
             'form'   => $form->createView(),
-         'matches'=> $finalProductsMatching,
+            'matches'=> $finalProductsMatching,
         ));
     }
 

@@ -1,0 +1,69 @@
+{#
+ # This file is part of the OpenMiamMiam project.
+ # (c) Isics <contact@isics.fr>
+ #
+ # This source file is subject to the AGPL v3 license that is bundled
+ # with this source code in the file LICENSE.
+ #}
+{% if nbProducts == 1 %}
+    {% set colClass = 'col-md-12' %}
+{% elseif nbProducts == 2 %}
+    {% set colClass = 'col-md-6' %}
+{% elseif nbProducts == 3 %}
+    {% set colClass = 'col-md-4' %}
+{% endif %}
+
+<div id="products-frequency">
+    <h2>{{ 'zone.products_frequency.title'|trans }}</h2>
+    <div class="row">
+        {% set showNoPriceStatement = false %}
+        {% for productAndFreq in products %}
+            <div class="{{ colClass }}">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h3>
+                            <a href="{{ path('open_miam_miam.catalog.product', {'branchSlug': branch.slug, 'productSlug': productAndFreq.product.slug, 'productId':productAndFreq.product.id}) }}">
+                                {{ productAndFreq.product.name }}</a>{% if productAndFreq.product.isBio %}&nbsp;<strong class="bio"><span>{{ 'bio'|trans }}</span></strong>{% endif %}
+                        </h3>
+                        <p>
+                            <a href="{{ path('open_miam_miam.catalog.product', {'branchSlug': branch.slug, 'productSlug': productAndFreq.product.slug, 'productId': productAndFreq.product.id}) }}">
+                                {% if productAndFreq.product.image is not null %}
+                                    <img src="{{ get_image_product_path(productAndFreq.product)|imagine_filter('m') }}" alt="{{ productAndFreq.product.name }}" class="img-thumbnail" />
+                                {% else %}
+                                    <img src="{{ 'bundles/isicsopenmiammiam/img/picture_placeholder.png'|imagine_filter('m') }}" alt="{{ productAndFreq.product.name }}" class="img-thumbnail" />
+                                {% endif %}
+                            </a>
+                        </p>
+                        <p>
+                            {% if productAndFreq.product.priceInfo %}
+                                {{ productAndFreq.product.priceInfo }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </p>
+                        <p>
+                            <a href="{{ path('open_miam_miam.producer', {'producerSlug': productAndFreq.product.producer.slug}) }}">
+                                <span class="glyphicon glyphicon-user"></span> {{ productAndFreq.product.producer }}
+                            </a>
+                        </p>
+                        <p class="price">
+                            {% if not productAndFreq.product.hasNoPrice %}
+                                {{ productAndFreq.product.price|number_format_currency(open_miam_miam.currency) }}
+                            {% else %}
+                                {% set showNoPriceStatement = true %}
+                                <span class="glyphicon glyphicon-time"></span>*
+                            {% endif %}
+                        </p>
+                        <p>
+                            {{ render(controller('IsicsOpenMiamMiamBundle:Cart:ShowAddForm', {'branch': branch, 'product': productAndFreq.product, 'frequency': productAndFreq.frequency})) }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if showNoPriceStatement %}
+    {% include 'IsicsOpenMiamMiamBundle:Branch:noPriceStatement.html.twig' %}
+{% endif %}

@@ -18,8 +18,10 @@
                 {{ render(controller('IsicsOpenMiamMiamBundle:Branch:ShowLatestArticles', {'branch': branch})) }}
             </div>
         </div>
-
-        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowProductsOfTheMoment', {'branch': branch})) }}
+        {% if user.id is defined %}
+        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowFrequencyProducts', { 'branch': branch})) }}
+        {% endif %}
+       {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowProductsOfTheMoment', {'branch': branch})) }}
     {% endblock %}
 
     {% block javascript %}

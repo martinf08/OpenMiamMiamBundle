@@ -106,7 +106,7 @@ class CartController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showAddFormAction(Branch $branch, Product $product, $view = null)
+    public function showAddFormAction(Branch $branch, Product $product, $view = null, $frequency = null)
     {
         $cart = $this->getCart($branch);
 
@@ -123,7 +123,12 @@ class CartController extends Controller
             if ($productAvailability->isAvailable()) {
                 $cartItem = $cart->createItem();
                 $cartItem->setProduct($product);
-                $cartItem->setQuantity(1);
+                if( isset($frequency) && !empty($frequency)) {
+                    $cartItem->setQuantity($frequency);
+                }
+                else {
+                    $cartItem->setQuantity(1);
+                }
 
                 $form = $this->container->get('form.factory')
                     ->createNamedBuilder(

@@ -31,8 +31,10 @@ class BranchController extends Controller
      */
     public function showHomepageAction(Branch $branch)
     {
+        $user = $this->get('security.context')->getToken()->getUser();
         return $this->render('IsicsOpenMiamMiamBundle:Branch:showHomepage.html.twig', array(
             'branch' => $branch,
+            'user' => $user,
         ));
     }
 

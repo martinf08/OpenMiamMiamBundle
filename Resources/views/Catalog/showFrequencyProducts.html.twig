@@ -14,7 +14,7 @@
 {% endif %}
 
 <div id="products-frequency">
-    <h2>{{ 'zone.products_frequency.title'|trans }}</h2>
+    <h2><span class="label label-success">{{ 'zone.products_frequency.label'|trans }}</span>{{ 'zone.products_frequency.title'|trans }}</h2>
     <div class="row">
         {% set showNoPriceStatement = false %}
         {% for productAndFreq in products %}

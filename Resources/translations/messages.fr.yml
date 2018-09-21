@@ -66,6 +66,8 @@ zone.welcome.more:                 "En savoir +"
 zone.news.title:                   "Actualités"
 zone.news.link:                    "Toutes les actualités"
 zone.products_of_the_moment.title: "Les produits du moment"
+zone.products_frequency.title:     "Achats fréquents"
+zone.products_frequency.label:     "Nouveau"
 zone.footer.admin_link:            "Accès gestionnaire"
 
 

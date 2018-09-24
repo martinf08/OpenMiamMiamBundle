@@ -16,7 +16,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\ProductMatching;
 class ProductMatchingRepository extends EntityRepository
 {
     /**
-     * Truncate then fill product_matches table with products in common order for every product
+     * Fill product_matches table with products in a common sale's order for every product
      *
      * @param null
      * 
@@ -53,7 +53,7 @@ class ProductMatchingRepository extends EntityRepository
             $query = $em->getRepository('IsicsOpenMiamMiamBundle:SalesOrderRow');
 
             $allProductsMatches = $query->createQueryBuilder('sor1')
-                                        ->select('IDENTITY(sor1.product) as complementary_product', 'COUNT(sor1.id) as nb_common_orders')
+                                        ->select('IDENTITY(sor1.product) as matching_product', 'COUNT(sor1.id) as nb_common_orders')
                                         ->join('IsicsOpenMiamMiamBundle:SalesOrderRow', 'sor2', 'WITH', 'sor1.salesOrder = sor2.salesOrder')
                                         ->join('sor1.product', 'p1')
                                         ->join('p1.category', 'cat1')
@@ -76,14 +76,14 @@ class ProductMatchingRepository extends EntityRepository
             {
                 $prodMatch = new ProductMatching();
                 $prodMatch->setProduct((int)$id);
-                $prodMatch->setComplementaryProduct((int)$match['complementary_product']);
+                $prodMatch->setMatchingProduct((int)$match['matching_product']);
                 $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
                 $em->persist($prodMatch);
             }
 
             $i++;
 
-            if ($i <= 100)
+            if ($i > 50)
             {
                 $em->flush();
                 $i = 0;

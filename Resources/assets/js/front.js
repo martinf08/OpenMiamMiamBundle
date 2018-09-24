@@ -265,3 +265,16 @@ OpenMiamMiam.AccordionFocus = function() {
 
     return object;
 }();
+
+OpenMiamMiam.AlreadyInCart = function() {
+
+    var object = function() {
+        $('#frequent-purchases button[type="submit"]').on('click', function (e) {
+            setTimeout(()=>{
+                $(this).parent().replaceWith('<p class="label label-info">Ce produit a déjà été ajouté à votre panier.</p>');
+            }, 1000);
+        });
+    };
+    
+    return object;
+}();

@@ -144,7 +144,7 @@ class CatalogController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showFrequencyProductsAction(Branch $branch)
+    public function showFrequentPurchasesAction(Branch $branch)
     {
 
         $user = $this->get('security.context')->getToken()->getUser();
@@ -167,7 +167,7 @@ class CatalogController extends Controller
         $productsAndQuantity = array_slice($productsAndQuantity, 0, 3);
         $nbproducts = count($productsAndQuantity);
 
-        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showFrequencyProducts.html.twig', array(
+        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showFrequentPurchases.html.twig', array(
             'branch' => $branch,
             'products' => $productsAndQuantity,
             'nbProducts' => $nbproducts,

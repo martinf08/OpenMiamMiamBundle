@@ -19,7 +19,7 @@
             </div>
         </div>
         {% if user.id is defined %}
-        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowFrequencyProducts', { 'branch': branch})) }}
+        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowFrequentPurchases', { 'branch': branch})) }}
         {% endif %}
        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:ShowProductsOfTheMoment', {'branch': branch})) }}
     {% endblock %}

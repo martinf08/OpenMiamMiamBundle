@@ -275,6 +275,6 @@ OpenMiamMiam.AlreadyInCart = function() {
             }, 1000);
         });
     };
-    
+
     return object;
 }();

@@ -47,8 +47,7 @@ class ProductMatching
      * @var Product $matchingProduct
      * 
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="matching_product_id")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
+     * @ORM\JoinColumn(name="matching_product_id", referencedColumnName="id", nullable=false)
      */
     private $matchingProduct;
 

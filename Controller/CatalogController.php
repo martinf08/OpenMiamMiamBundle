@@ -160,7 +160,7 @@ class CatalogController extends Controller
         foreach ($frequentPurchases as $item) {
             $association = array();
             $association['product'] = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($item['id'], $branch);
-            $association['frequency'] =  number_format(floor($item['quantity']),0,'.', ' ');
+            $association['frequency'] =  number_format(ceil($item['quantity']),0,'.', ' ');
 
             array_push($productsAndQuantity, $association);
         }

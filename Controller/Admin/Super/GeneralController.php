@@ -13,9 +13,6 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Controller\Admin\Super;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-//CODE TEST, NE PAS COMMIT
-use Doctrine\ORM\QueryBuilder;
-//END CODE TEST
 
 class GeneralController extends Controller
 {

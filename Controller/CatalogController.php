@@ -82,8 +82,9 @@ class CatalogController extends Controller
      */
     public function showProductAction(Branch $branch, $productSlug, $productId)
     {
-        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')
-            ->findOneByIdAndVisibleInBranch($productId, $branch);
+        $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
+        $product = $repository->findOneByIdAndVisibleInBranch($productId, $branch);
+        $matchingProducts = $repository->findMatchingProducts($product, $branch);
 
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');
@@ -103,6 +104,7 @@ class CatalogController extends Controller
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProduct.html.twig', array(
             'branch'  => $branch,
             'product' => $product,
+            'matches' => $matchingProducts,
         ));
     }
 

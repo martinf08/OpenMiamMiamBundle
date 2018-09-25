@@ -7,7 +7,15 @@
  #}
 <div class="row">
     <div class="col-md-12">
-        <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
+        {% if product is defined %}
+            <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
+        {% elseif matches is not empty %}
+            {% if cart.nbItems is defined and cart.nbItems > 1  %}
+                <h2>Les clients qui ont acheté ces produits ont également acheté :</h2>
+            {% elseif cart.nbItem == 1 %}
+                <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 <div class="row">

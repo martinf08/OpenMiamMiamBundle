@@ -90,10 +90,40 @@ class CartController extends Controller
             $violationMapper->mapViolation($error, $form);
         }
 
+        $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
+        $listOfProductMatchingByCartItems = array();
+        $listOfIdInCart = array();
+        foreach ($cart->getItems() as $item) {
+            $listOfProductMatchingByCartItems = array_merge($listOfProductMatchingByCartItems, $repository->findMatchingProducts($item->getProduct(), $branch));
+            array_push($listOfIdInCart, $item->getProductId());
+        }
+
+        foreach ($listOfProductMatchingByCartItems as $key => $productsMatchingItems) {
+            foreach ($listOfIdInCart as  $idOfCartItem) {
+                if ($idOfCartItem  == $productsMatchingItems->getId())
+                    unset($listOfProductMatchingByCartItems[$key]);
+            }
+        }
+
+        $productsMatching = array();
+        foreach ($listOfProductMatchingByCartItems as $productMatchingByCartItem)
+            array_push($productsMatching, $productMatchingByCartItem->getId());
+
+        $countProducts = array_count_values($productsMatching);
+        arsort($countProducts);
+
+        $finalProductsMatching = array();
+
+        foreach ($countProducts as $id => $value)
+            array_push($finalProductsMatching, $repository->findOneByIdAndVisibleInBranch($id, $branch));
+
+        $finalProductsMatching = array_slice($finalProductsMatching,0, 3);
+
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,
             'form'   => $form->createView(),
+            'matches'=> $finalProductsMatching,
         ));
     }
 

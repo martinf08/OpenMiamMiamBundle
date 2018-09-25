@@ -85,9 +85,6 @@ class CatalogController extends Controller
         $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
         $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch);
 
-        if (null === $product) {
-            throw new NotFoundHttpException('Product not found');
-        }
 
         if ($product->getSlug() !== $productSlug) {
             return $this->redirect($this->generateUrl(

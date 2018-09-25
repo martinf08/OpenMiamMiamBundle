@@ -10,10 +10,56 @@
  */
 
 namespace Isics\Bundle\OpenMiamMiamBundle\Entity\Repository;
+
 use Doctrine\ORM\EntityRepository;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 
 class ProductMatchingRepository extends EntityRepository
 {
+    /*
+     * Returns an array of Products
+     *
+     * @param Product $product
+     * @param Branch $branch
+     *
+     * @return array
+     */
+    public function findMatchingProducts(Product $product, Branch $branch) 
+    {
+        $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
+                            ->createQueryBuilder('bocc2')
+                            ->select('MIN(bocc2.begin)')
+                            ->where('bocc2.begin > CURRENT_TIMESTAMP()')
+                            ->andWhere('bocc2.branch = :br')
+                            ->setParameter('br', $branch->getId())
+                            ->getDQL();
+
+        return $qb = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:Product')
+                    ->createQueryBuilder('p')
+                    ->select('p')
+                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.matchingProduct = p.id')
+                    ->join('p.branches', 'br')
+                    
+                    ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
+                    ->join('p.producer', 'prcd')
+                    ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
+                    
+                    ->where('pm.product = :id')
+                    ->andWhere('br.id = :br')
+                    ->andWhere('p.availability = 3')
+                    ->andWhere('pa.isAttendee = 1')
+                    ->andWhere('pa.branchOccurrence = bocc.id')
+                    ->andWhere(
+                        $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
+                             ->expr()->in('bocc.begin', $nextBranchQ)
+                    )
+                    ->setParameter('id', $product->getId())
+                    ->setParameter('br', $branch->getId())
+                    ->setMaxResults(3)
+                    ->getQuery()->getResult();
+    }
+
     /**
      * Fill product_matches table with products in a common sale's order for every product
      *

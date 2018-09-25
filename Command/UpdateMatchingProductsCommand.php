@@ -35,12 +35,9 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $progressBar = new ProgressBar($output);
         $callback = function($i, $countAllProducts) use ($progressBar) {
-
             if ($i == 1) {
-
                 $progressBar->start($countAllProducts);
                 $progressBar->setBarCharacter('<fg=green>•</>');
                 $progressBar->setEmptyBarCharacter("<fg=red>•</>");

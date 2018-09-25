@@ -39,8 +39,9 @@ class ProductMatchingManager {
     /**
      * Update the list of matching products
      *
+     * @param Closure $callback
      */
-    public function updateMatchingProducts(\Closure $callback = null)
+    public function updateMatchingProducts(\Closure $callback)
     {
         $repository = $this->entityManager->getRepository(Product::class);
         $allProducts = $repository->findAll();
@@ -51,6 +52,7 @@ class ProductMatchingManager {
         foreach ($allProductsIndexes as $productIndex) {
             if ($callback) {
                 $callback($i, $countAllProducts);
+
                 foreach ($productIndex as $index) {
                     $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
                     $pmRepository->updateMatchingProducts($index['id']);

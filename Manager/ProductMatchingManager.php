@@ -1,13 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: linux
- * Date: 24/09/18
- * Time: 13:28
+/*
+ * This file is part of the OpenMiamMiam project.
+ *
+ * (c) Isics <contact@isics.fr>
+ *
+ * This source file is subject to the AGPL v3 license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace Isics\Bundle\OpenMiamMiamBundle\Manager;
 
+use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\ProductMatching;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -35,8 +39,14 @@ class ProductMatchingManager {
     /**
      * Update the list of matching products
      */
-    public function updateMatchingProducts() {
-        $query = $this->entiyManager->createQuery('SELECT p FROM IsicsOpenmiamMiamBundle:Product');
-       // $iterable =  $query->iterate();
+    public function updateMatchingProducts()
+    {
+        $repository = $this->entityManager->getRepository(Product::class);
+        $allProductsIndexes = $repository->findAll();
+
+        foreach ($allProductsIndexes as $productIndex) {
+            $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
+            $pmRepository->updateMatchingProducts($productIndex->getId());
+        }
     }
 }

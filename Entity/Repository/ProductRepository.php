@@ -14,6 +14,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Association;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\BranchOccurrence;
@@ -282,6 +283,18 @@ class ProductRepository extends EntityRepository
     }
 
     /**
+     * Returns all products' indexes by iteration
+     * 
+     * @return array
+     */
+    public function allProductsIdIteration()
+    {
+        $em = $this->getEntityManager();
+        $q = $em->createQuery('select p.id from IsicsOpenMiamMiamBundle:Product p');
+        return $q->iterate([], Query::HYDRATE_ARRAY);
+    }
+
+    /*
      * Returns an array of Products
      *
      * @param Product $product
@@ -323,5 +336,4 @@ class ProductRepository extends EntityRepository
                     ->setMaxResults(3)
                     ->getQuery()->getResult();
     }
-
 }

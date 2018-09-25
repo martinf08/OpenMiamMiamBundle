@@ -12,12 +12,16 @@
 namespace Isics\Bundle\OpenMiamMiamBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Isics\OpenMiamMiamBundle\Entity\ProductMatching
  *
- * @ORM\Table(name="product_matches")
+ * @ORM\Table(
+ *     name="product_matches",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(columns={"product_id", "matching_product_id"})
+ *     }
+ * )
  * @ORM\Entity(repositoryClass="Isics\Bundle\OpenMiamMiamBundle\Entity\Repository\ProductMatchingRepository")
  */
 class ProductMatching
@@ -32,29 +36,27 @@ class ProductMatching
     private $id;
 
     /**
-     * @var integer $product
+     * @var Product $product
      * 
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="product_id", type="integer")
-     * @ORM\JoinColumn(name="product_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
      */
     private $product;
 
     /**
-     * @var integer $complementary_product
+     * @var Product $matchingProduct
      * 
      * @ORM\ManyToOne(targetEntity="Product")
-     * @ORM\Column(name="complementary_product_id", type="integer")
-     * @ORM\JoinColumn(name="complementary_product_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="matching_product_id", referencedColumnName="id", nullable=false)
      */
-    private $complementary_product;
+    private $matchingProduct;
 
     /**
-     * @var integer $nb_common_orders
+     * @var integer $nbCommonOrders
      * 
-     * @ORM\Column(name="nb_common_orders", type="integer")
+     * @ORM\Column(name="nb_common_orders", type="integer", nullable=false)
      */
-    private $nb_common_orders;
+    private $nbCommonOrders;
 
     /**
      * Get id
@@ -91,50 +93,50 @@ class ProductMatching
     }
 
     /**
-     * Set complementary_produt
+     * Set matching product
      *
-     * @param Product $complementary_product
+     * @param Product $matchingProduct
      *
      * @return ProductMatching
      */
-    public function setComplementaryProduct($complementary_product = null)
+    public function setMatchingProduct($matchingProduct = null)
     {
-        $this->complementary_product = $complementary_product;
+        $this->matchingProduct = $matchingProduct;
 
         return $this;
     }
 
     /**
-     * Get complementary_product
+     * Get matching product
      *
      * @return Product
      */
-    public function getComplementaryProduct()
+    public function getMatchingProduct()
     {
-        return $this->complementary_product;
+        return $this->matchingProduct;
     }
 
     /**
-     * Set nb_common_order
+     * Set number of common orders
      *
-     * @param integer $nb_common_orders
+     * @param integer $nbCommonOrders
      *
      * @return integer
      */
-    public function setNbCommonOrders($nb_common_orders = null)
+    public function setNbCommonOrders($nbCommonOrders = null)
     {
-        $this->nb_common_orders = $nb_common_orders;
+        $this->nbCommonOrders = $nbCommonOrders;
 
         return $this;
     }
 
     /**
-     * Get nb_common_orders
+     * Get number of common orders
      *
      * @return integer
      */
     public function getNbCommonOrders()
     {
-        return $this->nb_common_orders;
+        return $this->nbCommonOrders;
     }
 }

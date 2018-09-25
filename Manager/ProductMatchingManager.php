@@ -59,7 +59,7 @@ class ProductMatchingManager {
         $progressBar->setFormat(
             "%current%/%max% [%bar%] %percent:3s%%\n  Remaining : %estimated:-6s%"
         );
-        $i = 0;
+        $i = 1;
         foreach ($allProductsIndexes as $productIndex) {
 
             foreach ($productIndex as $index) {
@@ -73,6 +73,7 @@ class ProductMatchingManager {
                   $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
                   $pmRepository->updateMatchingProducts($index['id']);
               }
+              
             $i++;
         }
     }

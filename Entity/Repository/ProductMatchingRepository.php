@@ -10,79 +10,93 @@
  */
 
 namespace Isics\Bundle\OpenMiamMiamBundle\Entity\Repository;
+
 use Doctrine\ORM\EntityRepository;
-use Isics\Bundle\OpenMiamMiamBundle\Entity\ProductMatching;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 
 class ProductMatchingRepository extends EntityRepository
 {
+    /*
+     * Returns an array of Products
+     *
+     * @param Product $product
+     * @param Branch $branch
+     *
+     * @return array
+     */
+    public function findMatchingProducts(Product $product, Branch $branch) 
+    {
+        $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
+                            ->createQueryBuilder('bocc2')
+                            ->select('MIN(bocc2.begin)')
+                            ->where('bocc2.begin > CURRENT_TIMESTAMP()')
+                            ->andWhere('bocc2.branch = :br')
+                            ->setParameter('br', $branch->getId())
+                            ->getDQL();
+
+        return $qb = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:Product')
+                    ->createQueryBuilder('p')
+                    ->select('p')
+                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.matchingProduct = p.id')
+                    ->join('p.branches', 'br')
+                    
+                    ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
+                    ->join('p.producer', 'prcd')
+                    ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
+                    
+                    ->where('pm.product = :id')
+                    ->andWhere('br.id = :br')
+                    ->andWhere('p.availability = 3')
+                    ->andWhere('pa.isAttendee = 1')
+                    ->andWhere('pa.branchOccurrence = bocc.id')
+                    ->andWhere(
+                        $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
+                             ->expr()->in('bocc.begin', $nextBranchQ)
+                    )
+                    ->setParameter('id', $product->getId())
+                    ->setParameter('br', $branch->getId())
+                    ->setMaxResults(3)
+                    ->getQuery()->getResult();
+    }
+
     /**
-     * Truncate then fill product_matches table with products in common order for every product
+     * Fill product_matches table with products in a common sale's order for every product
      *
      * @param null
      * 
      * @return array
      */
-    public function updateMatchingProducts() {
-
+    public function updateMatchingProducts($id)
+    {
         $em = $this->getEntityManager();
-
-        // Purge the table
         $conn = $em->getConnection();
-        $truncate = $conn->prepare('TRUNCATE TABLE product_matches');
-        $truncate->execute();
 
-        // Find all products
-        $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
-                            ->createQueryBuilder('p')
-                            // ->setFirstResult(76)
-                            // ->setMaxResults(8)
-                            ->getquery();
+        $deleteQuery = 'DELETE FROM product_matches WHERE product_id = :id';
+        $stmt = $conn->prepare($deleteQuery);
+        $stmt->bindParam('id', $id);
+        $stmt->execute();
 
-        $allProducts = $productsQuery->getResult();
-
-        // Fill the product_matches table
-        foreach($allProducts as $product)
-        {
-            $id = $product->getId();
-
-            $query = $em->getRepository('IsicsOpenMiamMiamBundle:SalesOrderRow');
-            $subquery = $em->getRepository('IsicsOpenMiamMiamBundle:Product');
-
-            $subQueryStmt = $subquery->createQueryBuilder('p')
-                                     ->select('ctt.id')
-                                     ->join('p.category', 'cat')
-                                     ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt', 'WITH', 'cat.categoryType = ctt.id')
-                                     ->where('p.id = :productId')
-                                     ->setParameter('productId', $id)
-                                     ->getQuery()
-                                     ->getResult();
-
-            if (array_key_exists(0, $subQueryStmt)) 
-            {
-                $allProductsMatches = $query->createQueryBuilder('sor1')
-                                            ->select( 'IDENTITY(sor1.product) as complementary_product', 'COUNT(sor1.id) as nb_common_orders')
-                                            ->join('IsicsOpenMiamMiamBundle:SalesOrderRow', 'sor2', 'WITH', 'sor1.salesOrder = sor2.salesOrder')
-                                            ->join('sor1.product', 'p')
-                                            ->join('p.category', 'cat')
-                                            ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt', 'WITH', 'cat.categoryType = ctt.id')
-                                            ->where('sor1.product != :productId')
-                                            ->andWhere('sor2.product = :productId')
-                                            ->andWhere('ctt.id ='. $subQueryStmt[0]['id'])
-                                            ->groupBy('sor1.product')
-                                            ->orderBy('nb_common_orders', 'DESC')
-                                            ->setParameter('productId', $id)
-                                            ->getQuery()->getResult();
-
-                foreach($allProductsMatches as $match)
-                {
-                    $prodMatch = new ProductMatching();
-                    $prodMatch->setProduct((int)$id);
-                    $prodMatch->setComplementaryProduct((int)$match['complementary_product']);
-                    $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
-                    $em->persist($prodMatch);
-                    $em->flush();
-                }
-            }
-        }
+        $insertQuery = '
+            INSERT INTO product_matches (product_id, matching_product_id, nb_common_orders)
+            SELECT sor2.product_id AS `product_id`, sor1.product_id AS matching_product_id, COUNT(sor1.id) AS nb_common_orders
+            FROM sales_order_row AS sor1
+            JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id)
+            JOIN product as p1 ON p1.id = sor1.product_id
+            JOIN category AS cat1 ON p1.category_id = cat1.id
+            JOIN category_type AS ctt1 ON cat1.category_type_id = ctt1.id
+            
+            JOIN product as p2 ON p2.id = sor2.product_id
+            JOIN category AS cat2 ON p2.category_id = cat2.id
+            JOIN category_type AS ctt2 ON cat2.category_type_id = ctt2.id
+            
+            WHERE sor1.product_id != sor2.product_id
+            AND sor2.product_id = :id
+            AND ctt1.id = ctt2.id
+            GROUP BY matching_product_id, `product_id`
+            ORDER BY `product_id`, nb_common_orders DESC';
+        $stmt2 = $conn->prepare($insertQuery);
+        $stmt2->bindParam('id', $id);
+        $stmt2->execute();
     }
 }

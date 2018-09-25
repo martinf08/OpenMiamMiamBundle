@@ -43,7 +43,7 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
                 $progressBar->setEmptyBarCharacter("<fg=red>•</>");
                 $progressBar->setProgressCharacter("<fg=green>➤</>");
                 $progressBar->setFormat(
-                    "%current%/%max% [%bar%] %percent:3s%%\n  Remaining : %estimated:-6s%"
+                    "%current%/%max% [%bar%] %percent:3s%%\n Elapsed : %elapsed% Remaining : %remaining:-6s%"
                 );
             }
             else {

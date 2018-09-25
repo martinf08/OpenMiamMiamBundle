@@ -22,72 +22,35 @@ class ProductMatchingRepository extends EntityRepository
      * 
      * @return array
      */
-    public function updateMatchingProducts() {
+    public function updateMatchingProducts($id) {
 
         $em = $this->getEntityManager();
+        $conn = $em->getConnection();
 
-        // Find all products
-        $productsQuery = $em->getRepository('IsicsOpenMiamMiamBundle:Product')
-                            ->createQueryBuilder('p')
-                            ->orderBy('p.id')
-                            ->getQuery();
+        $deleteQuery = 'DELETE FROM product_matches WHERE product_id = :id';
+        $stmt = $conn->prepare($deleteQuery);
+        $stmt->bindParam('id',$id);
+        $stmt->execute();
 
-        $allProducts = $productsQuery->getResult();
-
-        // Fill the product_matches table
-        $i = 0;
-
-        foreach($allProducts as $product)
-        {
-            $id = $product->getId();
-
-            // Delete previous entries
-            $deleteMatches = $em->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')
-                                ->createQueryBuilder('pm')
-                                ->delete(ProductMatching::class, 'pm')
-                                ->where('pm.product = :productId')
-                                ->setParameter('productId', $id)
-                                ->getQuery()
-                                ->execute();
-
-            $query = $em->getRepository('IsicsOpenMiamMiamBundle:SalesOrderRow');
-
-            $allProductsMatches = $query->createQueryBuilder('sor1')
-                                        ->select('IDENTITY(sor1.product) as matching_product', 'COUNT(sor1.id) as nb_common_orders')
-                                        ->join('IsicsOpenMiamMiamBundle:SalesOrderRow', 'sor2', 'WITH', 'sor1.salesOrder = sor2.salesOrder')
-                                        ->join('sor1.product', 'p1')
-                                        ->join('p1.category', 'cat1')
-                                        ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt1', 'WITH', 'cat1.categoryType = ctt1.id')
-
-                                        ->join('sor2.product', 'p2')
-                                        ->join('p2.category', 'cat2')
-                                        ->join('IsicsOpenMiamMiamBundle:CategoryType', 'ctt2', 'WITH', 'cat2.categoryType = ctt2.id')
-
-                                        ->where('sor1.product != :productId')
-                                        ->andWhere('sor2.product = :productId')
-
-                                        ->andWhere('ctt1.id = ctt2.id')
-                                        ->groupBy('sor1.product')
-                                        ->addOrderBy('nb_common_orders', 'DESC')
-                                        ->setParameter('productId', $id)
-                                        ->getQuery()->getResult();
-
-            foreach($allProductsMatches as $match)
-            {
-                $prodMatch = new ProductMatching();
-                $prodMatch->setProduct((int)$id);
-                $prodMatch->setMatchingProduct((int)$match['matching_product']);
-                $prodMatch->setNbCommonOrders((int)$match['nb_common_orders']);
-                $em->persist($prodMatch);
-            }
-
-            $i++;
-
-            if ($i > 50)
-            {
-                $em->flush();
-                $i = 0;
-            }
-        }
+        $insertQuery = 'INSERT INTO product_matches (product_id, matching_product_id, nb_common_orders)
+        SELECT sor2.product_id AS `product_id`, sor1.product_id AS matching_product_id, COUNT(sor1.id) AS nb_common_orders
+                  FROM sales_order_row AS sor1
+                  JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id)
+                  JOIN product as p1 ON p1.id = sor1.product_id
+                  JOIN category AS cat1 ON p1.category_id = cat1.id
+                  JOIN category_type AS ctt1 ON cat1.category_type_id = ctt1.id
+                  
+                  JOIN product as p2 ON p2.id = sor2.product_id
+                  JOIN category AS cat2 ON p2.category_id = cat2.id
+                  JOIN category_type AS ctt2 ON cat2.category_type_id = ctt2.id
+                  
+                  WHERE sor1.product_id != sor2.product_id
+                  AND sor2.product_id = :id
+                  AND ctt1.id = ctt2.id
+                  GROUP BY matching_product_id, `product_id`
+                  ORDER BY `product_id`, nb_common_orders DESC';
+        $stmt2 = $conn->prepare($insertQuery);
+        $stmt2->bindParam('id',$id );
+        $stmt2->execute();
     }
 }

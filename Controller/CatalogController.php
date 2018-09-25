@@ -85,6 +85,19 @@ class CatalogController extends Controller
         $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
         $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch);
 
+        $branchOccurrenceManager = $this->container->get('open_miam_miam.branch_occurrence_manager');
+
+        $availableMatchingProducts = array();
+        if (isset($matchingProducts) && !empty($matchingProducts)) {
+            foreach ($matchingProducts as $matchingProduct) {
+                $productAvailability = $branchOccurrenceManager->getProductAvailabilityForNext($branch, $matchingProduct);
+                if (count($availableMatchingProducts) < 3) {
+                    if ($productAvailability->getReason() == 0 || $productAvailability->getReason() == 1)
+                        array_push($availableMatchingProducts, $matchingProduct);
+                }
+            }
+        }
+
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');
         }
@@ -103,7 +116,7 @@ class CatalogController extends Controller
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProduct.html.twig', array(
             'branch'  => $branch,
             'product' => $product,
-            'matches' => $matchingProducts,
+            'matches' => $availableMatchingProducts,
         ));
     }
 

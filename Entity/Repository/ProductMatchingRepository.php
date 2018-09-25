@@ -23,7 +23,6 @@ class ProductMatchingRepository extends EntityRepository
      * @return array
      */
     public function updateMatchingProducts($id) {
-
         $em = $this->getEntityManager();
         $conn = $em->getConnection();
 

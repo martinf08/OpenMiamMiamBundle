@@ -36,12 +36,30 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
 
+        $progressBar = new ProgressBar($output);
+        $callback = function($i, $countAllProducts) use ($progressBar) {
+
+            if ($i == 1) {
+
+                $progressBar->start($countAllProducts);
+                $progressBar->setBarCharacter('<fg=green>•</>');
+                $progressBar->setEmptyBarCharacter("<fg=red>•</>");
+                $progressBar->setProgressCharacter("<fg=green>➤</>");
+                $progressBar->setFormat(
+                    "%current%/%max% [%bar%] %percent:3s%%\n  Remaining : %estimated:-6s%"
+                );
+            }
+            else {
+                $progressBar->setCurrent($i);
+            }
+        };
         $output->writeln('<comment>Computing matching products...</comment>');
 
         $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
-        $productMatchingManager->updateMatchingProducts($output);
+        $productMatchingManager->updateMatchingProducts($callback);
 
         $output->writeln('');
         $output->writeln('<info>Task is completed.</info>');
     }
 }
+

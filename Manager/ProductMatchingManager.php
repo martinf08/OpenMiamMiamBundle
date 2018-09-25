@@ -39,7 +39,7 @@ class ProductMatchingManager {
     /**
      * Update the list of matching products
      *
-     * @param Closure $callback
+     * @param \Closure $callback
      */
     public function updateMatchingProducts(\Closure $callback)
     {

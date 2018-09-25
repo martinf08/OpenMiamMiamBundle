@@ -82,9 +82,8 @@ class CatalogController extends Controller
      */
     public function showProductAction(Branch $branch, $productSlug, $productId)
     {
-        $repository = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product');
-        $product = $repository->findOneByIdAndVisibleInBranch($productId, $branch);
-        $matchingProducts = $repository->findMatchingProducts($product, $branch);
+        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
+        $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch);
 
         $branchOccurrenceManager = $this->container->get('open_miam_miam.branch_occurrence_manager');
 

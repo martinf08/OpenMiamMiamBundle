@@ -285,7 +285,7 @@ class ProductRepository extends EntityRepository
     /**
      * Returns all products' indexes by iteration
      * 
-     * return array
+     * @return array
      */
     public function allProductsIdIteration()
     {

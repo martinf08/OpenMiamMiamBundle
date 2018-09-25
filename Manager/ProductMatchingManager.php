@@ -42,11 +42,13 @@ class ProductMatchingManager {
     public function updateMatchingProducts()
     {
         $repository = $this->entityManager->getRepository(Product::class);
-        $allProductsIndexes = $repository->findAll();
+        $allProductsIndexes = $repository->allProductsIdIteration();
 
         foreach ($allProductsIndexes as $productIndex) {
-            $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
-            $pmRepository->updateMatchingProducts($productIndex->getId());
+            foreach ($productIndex as $index) {
+                $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
+                $pmRepository->updateMatchingProducts($index['id']);
+            }
         }
     }
 }

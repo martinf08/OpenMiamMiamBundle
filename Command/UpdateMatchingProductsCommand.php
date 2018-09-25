@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
+
 use Isics\Bundle\OpenMiamMiamBundle\Manager\ProductMatchingManager;
 
 class UpdateMatchingProductsCommand extends ContainerAwareCommand
@@ -34,20 +35,12 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // $progressBar = new ProgressBar($output, 100);
+
         $output->writeln('<comment>Computing matching products...</comment>');
-        // $progressBar->start();
 
-        // $i = 0;
-        // while ($i++ < 100) {
+        $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
+        $productMatchingManager->updateMatchingProducts($output);
 
-            $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
-            $productMatchingManager->updateMatchingProducts();
-
-        //     $progressBar->advance();
-        // }
-
-        // $progressBar->finish();
         $output->writeln('');
         $output->writeln('<info>Task is completed.</info>');
     }

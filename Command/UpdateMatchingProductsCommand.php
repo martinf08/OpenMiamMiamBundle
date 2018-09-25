@@ -35,6 +35,8 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('<comment>Computing matching products...</comment>');
+        $output->writeln('');
         $progressBar = new ProgressBar($output);
         $callback = function($i, $countAllProducts) use ($progressBar) {
             if ($i == 1) {
@@ -50,7 +52,6 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
                 $progressBar->setCurrent($i);
             }
         };
-        $output->writeln('<comment>Computing matching products...</comment>');
 
         $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
         $productMatchingManager->updateMatchingProducts($callback);

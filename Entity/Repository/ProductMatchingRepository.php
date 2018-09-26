@@ -17,7 +17,7 @@ class ProductMatchingRepository extends EntityRepository
     /**
      * Fill product_matches table with products in a common sale's order for every product
      *
-     * @param null
+     * @param integer
      * 
      * @return array
      */

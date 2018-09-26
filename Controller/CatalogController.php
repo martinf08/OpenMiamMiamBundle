@@ -82,9 +82,9 @@ class CatalogController extends Controller
      */
     public function showProductAction(Branch $branch, $productSlug, $productId)
     {
-        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
-        $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch);
-
+        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')
+            ->findOneByIdAndVisibleInBranch($productId, $branch);
+        
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');
         }

@@ -18,7 +18,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 class ProductMatchingRepository extends EntityRepository
 {
     /**
-     * Returns an array of Products
+     * Returns an array of 3 Products
      *
      * @param Product $product
      * @param Branch $branch
@@ -37,14 +37,11 @@ class ProductMatchingRepository extends EntityRepository
 
         return $qb = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:Product')
                     ->createQueryBuilder('p')
-                    ->select('p')
                     ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.matchingProduct = p.id')
                     ->join('p.branches', 'br')
-                    
                     ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
                     ->join('p.producer', 'prcd')
                     ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
-                    
                     ->where('pm.product = :id')
                     ->andWhere('br.id = :br')
                     ->andWhere('p.availability = 3')
@@ -63,7 +60,7 @@ class ProductMatchingRepository extends EntityRepository
     /**
      * Fill product_matches table with products in a common sale's order for every product
      *
-     * @param null
+     * @param integer
      * 
      * @return array
      */

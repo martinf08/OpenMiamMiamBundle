@@ -21,7 +21,6 @@ use Doctrine\ORM\EntityManager;
  */
 class ProductMatchingManager
 {
-
     /**
      * @var EntityManager $entityManager
      */

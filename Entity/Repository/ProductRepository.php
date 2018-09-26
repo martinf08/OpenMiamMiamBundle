@@ -289,13 +289,13 @@ class ProductRepository extends EntityRepository
      */
     public function findAllId()
     {
-       return $this->createQueryBuilder('p')->select('p.id ')
+       return $this->createQueryBuilder('p')->select('p.id')
                         ->getQuery()
                         ->iterate([], Query::HYDRATE_SCALAR);
     }
 
     /**
-     * Return count products
+     * Returns count products
      *
      * @return int
      */

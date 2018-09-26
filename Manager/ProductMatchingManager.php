@@ -50,8 +50,8 @@ class ProductMatchingManager
         $i = 1;
 
         foreach ($allIds as $id) {
-            $pmRepository = $this->entityManager->getRepository(ProductMatching::class);
-            $pmRepository->updateMatchingProducts($id[0]['id']);
+             $this->entityManager->getRepository(ProductMatching::class)
+                ->updateMatchingProducts($id[0]['id']);
 
             if ($callback) {
                 $callback($i, $nbProducts);

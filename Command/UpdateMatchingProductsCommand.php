@@ -44,8 +44,10 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
         );
 
         $callback = function($i, $nbProducts) use ($progressBar) {
-            if ($i == 1) $progressBar->start($nbProducts);
-            else $progressBar->setCurrent($i);
+            if ($i == 1) {
+                $progressBar->start($nbProducts);
+            }
+            $progressBar->setCurrent($i);
         };
 
         $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');

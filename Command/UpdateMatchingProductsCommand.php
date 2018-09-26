@@ -38,9 +38,9 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
         $output->writeln('<comment>Computing matching products...</comment>');
         $output->writeln('');
         $progressBar = new ProgressBar($output);
-        $callback = function($i, $countAllProducts) use ($progressBar) {
+        $callback = function($i, $allProducts) use ($progressBar) {
             if ($i == 1) {
-                $progressBar->start($countAllProducts);
+                $progressBar->start($allProducts);
                 $progressBar->setBarCharacter('<fg=green>•</>');
                 $progressBar->setEmptyBarCharacter("<fg=red>•</>");
                 $progressBar->setProgressCharacter("<fg=green>➤</>");

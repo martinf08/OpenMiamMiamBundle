@@ -336,4 +336,12 @@ class ProductRepository extends EntityRepository
                     ->setMaxResults(3)
                     ->getQuery()->getResult();
     }
+    /**
+     * Return sum of products
+     *
+     * @return array
+     */
+    public function countAllProducts() {
+       return $query =  $this->createQueryBuilder('p')->select('COUNT(p) as allproducts')->getQuery()->getSingleResult();
+    }
 }

@@ -44,14 +44,13 @@ class ProductMatchingManager {
     public function updateMatchingProducts(\Closure $callback)
     {
         $repository = $this->entityManager->getRepository(Product::class);
-        $allProducts = $repository->findAll();
-        $countAllProducts = count($allProducts);
+        $allProducts = (int) $repository->countAllProducts()['allproducts'];
         $allProductsIndexes = $repository->allProductsIdIteration();
 
         $i = 1;
         foreach ($allProductsIndexes as $productIndex) {
             if ($callback) {
-                $callback($i, $countAllProducts);
+                $callback($i, $allProducts);
 
                 foreach ($productIndex as $index) {
                     $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);

@@ -283,9 +283,9 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Returns all products' indexes by iteration
+     * Returns all products indexes by iteration
      * 
-     * @return array
+     * @return iterable
      */
     public function allProductsIdIteration()
     {
@@ -297,9 +297,10 @@ class ProductRepository extends EntityRepository
     /**
      * Return sum of products
      *
-     * @return array
+     * @return int
      */
-    public function countAllProducts() {
-       return $query =  $this->createQueryBuilder('p')->select('COUNT(p) as allproducts')->getQuery()->getSingleResult();
+    public function count()
+    {
+       return $query =  $this->createQueryBuilder('p')->select('COUNT(p)')->getQuery()->getSingleScalarResult();
     }
 }

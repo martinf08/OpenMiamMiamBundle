@@ -72,13 +72,13 @@ class ProductMatchingRepository extends EntityRepository
         $em = $this->getEntityManager();
         $conn = $em->getConnection();
 
-        $deleteQuery = 'DELETE FROM product_matches WHERE product_id = :id';
+        $deleteQuery = 'DELETE FROM product_matching WHERE product_id = :id';
         $stmt = $conn->prepare($deleteQuery);
         $stmt->bindParam('id', $id);
         $stmt->execute();
 
         $insertQuery = '
-            INSERT INTO product_matches (product_id, matching_product_id, nb_common_orders)
+            INSERT INTO product_matching (product_id, matching_product_id, nb_common_orders)
             SELECT sor2.product_id AS `product_id`, sor1.product_id AS matching_product_id, COUNT(sor1.id) AS nb_common_orders
             FROM sales_order_row AS sor1
             JOIN sales_order_row AS sor2 ON (sor2.sales_order_id = sor1.sales_order_id)

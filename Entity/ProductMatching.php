@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Isics\OpenMiamMiamBundle\Entity\ProductMatching
  *
  * @ORM\Table(
- *     name="product_matches",
+ *     name="product_matching",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(columns={"product_id", "matching_product_id"})
  *     }

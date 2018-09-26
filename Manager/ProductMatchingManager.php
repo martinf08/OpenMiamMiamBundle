@@ -19,7 +19,8 @@ use Doctrine\ORM\EntityManager;
  *
  * @package Isics\Bundle\OpenMiamMiamBundle\Manager
  */
-class ProductMatchingManager {
+class ProductMatchingManager
+{
 
     /**
      * @var EntityManager $entityManager
@@ -33,7 +34,7 @@ class ProductMatchingManager {
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager  = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**

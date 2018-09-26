@@ -87,8 +87,6 @@ class CatalogController extends Controller
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
         $matchingProducts = $this->get('open_miam_miam.product_matching_manager')
                                  ->findMatchingProducts($product, $branch, $cart);
-        
-        // $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch, $cart);
 
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');

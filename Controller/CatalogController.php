@@ -103,7 +103,6 @@ class CatalogController extends Controller
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProduct.html.twig', array(
             'branch'  => $branch,
             'product' => $product,
-            'matches' => $matchingProducts,
         ));
     }
 

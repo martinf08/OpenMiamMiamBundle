@@ -19,8 +19,8 @@ use Doctrine\ORM\EntityManager;
  *
  * @package Isics\Bundle\OpenMiamMiamBundle\Manager
  */
-class ProductMatchingManager {
-
+class ProductMatchingManager
+{
     /**
      * @var EntityManager $entityManager
      */
@@ -33,7 +33,7 @@ class ProductMatchingManager {
      */
     public function __construct(EntityManager $entityManager)
     {
-        $this->entityManager  = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -41,24 +41,23 @@ class ProductMatchingManager {
      *
      * @param \Closure $callback
      */
-    public function updateMatchingProducts(\Closure $callback)
+    public function updateMatchingProducts(\Closure $callback = null)
     {
         $repository = $this->entityManager->getRepository(Product::class);
-        $allProducts = $repository->findAll();
-        $countAllProducts = count($allProducts);
-        $allProductsIndexes = $repository->allProductsIdIteration();
+        $nbProducts = $repository->count();
+        $allIds = $repository->findAllId();
 
         $i = 1;
-        foreach ($allProductsIndexes as $productIndex) {
-            if ($callback) {
-                $callback($i, $countAllProducts);
 
-                foreach ($productIndex as $index) {
-                    $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
-                    $pmRepository->updateMatchingProducts($index['id']);
-                }
-                $i++;
+        foreach ($allIds as $id) {
+            if ($callback) {
+                $callback($i, $nbProducts);
             }
+
+            $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
+            $pmRepository->updateMatchingProducts($id[0]['id']);
+
+            $i++;
         }
     }
 }

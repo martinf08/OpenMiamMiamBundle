@@ -12,12 +12,9 @@
 namespace Isics\Bundle\OpenMiamMiamBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
-
-use Isics\Bundle\OpenMiamMiamBundle\Manager\ProductMatchingManager;
 
 class UpdateMatchingProductsCommand extends ContainerAwareCommand
 {
@@ -37,27 +34,24 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
     {
         $output->writeln('<comment>Computing matching products...</comment>');
         $output->writeln('');
+
         $progressBar = new ProgressBar($output);
-        $callback = function($i, $countAllProducts) use ($progressBar) {
-            if ($i == 1) {
-                $progressBar->start($countAllProducts);
-                $progressBar->setBarCharacter('<fg=green>•</>');
-                $progressBar->setEmptyBarCharacter("<fg=red>•</>");
-                $progressBar->setProgressCharacter("<fg=green>➤</>");
-                $progressBar->setFormat(
-                    "%current%/%max% [%bar%] %percent:3s%%\n Elapsed : %elapsed% Remaining : %remaining:-6s%"
-                );
+        $progressBar->setBarCharacter('<fg=green>•</>');
+        $progressBar->setEmptyBarCharacter('<fg=red>•</>');
+        $progressBar->setProgressCharacter('<fg=green>➤</>');
+        $progressBar->setFormat(
+            "%memory% %current%/%max% [%bar%] %percent:3s%%\n Elapsed : %elapsed% Remaining : %remaining:-6s%"
+        );
+
+        $callback = function($i, $nbProducts) use ($progressBar) {
+            if ($i === 1) {
+                $progressBar->start($nbProducts);
             }
-            else {
-                $progressBar->setCurrent($i);
-            }
+            $progressBar->setCurrent($i);
         };
 
         $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
         $productMatchingManager->updateMatchingProducts($callback);
-
-        $output->writeln('');
-        $output->writeln('<info>Task is completed.</info>');
     }
 }
 

@@ -13,6 +13,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Controller;
 
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Category;
+use Isics\Bundle\OpenMiamMiamBundle\Model\Cart\Cart;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,7 +84,9 @@ class CatalogController extends Controller
     public function showProductAction(Branch $branch, $productSlug, $productId)
     {
         $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
-        $matchingProducts = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->findMatchingProducts($product, $branch);
+        $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
+        $matchingProducts = $this->get('open_miam_miam.product_matching_manager')
+                                 ->findMatchingProducts($product, $branch, $cart);
 
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');

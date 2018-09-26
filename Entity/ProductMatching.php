@@ -75,7 +75,7 @@ class ProductMatching
      *
      * @return ProductMatching
      */
-    public function setProduct($product = null)
+    public function setProduct($product)
     {
         $this->product = $product;
 
@@ -99,7 +99,7 @@ class ProductMatching
      *
      * @return ProductMatching
      */
-    public function setMatchingProduct($matchingProduct = null)
+    public function setMatchingProduct($matchingProduct)
     {
         $this->matchingProduct = $matchingProduct;
 
@@ -123,7 +123,7 @@ class ProductMatching
      *
      * @return integer
      */
-    public function setNbCommonOrders($nbCommonOrders = null)
+    public function setNbCommonOrders($nbCommonOrders)
     {
         $this->nbCommonOrders = $nbCommonOrders;
 

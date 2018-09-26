@@ -26,8 +26,7 @@ class ProductMatchingRepository extends EntityRepository
      */
     public function updateMatchingProducts($id)
     {
-        $em = $this->getEntityManager();
-        $conn = $em->getConnection();
+        $conn = $this->getEntityManager()->getConnection();
 
         $deleteQuery = 'DELETE FROM product_matching WHERE product_id = :id';
         $stmt = $conn->prepare($deleteQuery);

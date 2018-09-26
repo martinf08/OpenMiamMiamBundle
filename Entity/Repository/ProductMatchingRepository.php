@@ -17,7 +17,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 
 class ProductMatchingRepository extends EntityRepository
 {
-    /*
+    /**
      * Returns an array of Products
      *
      * @param Product $product

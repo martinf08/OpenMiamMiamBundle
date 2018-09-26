@@ -46,8 +46,7 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
                 $progressBar->setFormat(
                     "%current%/%max% [%bar%] %percent:3s%%\n Elapsed : %elapsed% Remaining : %remaining:-6s%"
                 );
-            }
-            else {
+            } else {
                 $progressBar->setCurrent($i);
             }
         };

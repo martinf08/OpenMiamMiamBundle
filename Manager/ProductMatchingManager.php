@@ -42,23 +42,21 @@ class ProductMatchingManager
      *
      * @param \Closure $callback
      */
-    public function updateMatchingProducts(\Closure $callback)
+    public function updateMatchingProducts(\Closure $callback = null)
     {
         $repository = $this->entityManager->getRepository(Product::class);
-        $allProducts = (int) $repository->count();
-        $allProductsIndexes = $repository->allProductsIdIteration();
+        $nbProducts = $repository->count();
+        $allIds = $repository->findAllId();
 
         $i = 1;
-        foreach ($allProductsIndexes as $productIndex) {
-            if ($callback) {
-                $callback($i, $allProducts);
 
-                foreach ($productIndex as $index) {
-                    $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
-                    $pmRepository->updateMatchingProducts($index['id']);
-                }
-                $i++;
-            }
+        foreach ($allIds as $id) {
+            if ($callback) $callback($i, $nbProducts);
+
+            $pmRepository = $repository = $this->entityManager->getRepository(ProductMatching::class);
+            $pmRepository->updateMatchingProducts($id[0]['id']);
+
+            $i++;
         }
     }
 }

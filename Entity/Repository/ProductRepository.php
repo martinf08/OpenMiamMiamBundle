@@ -283,24 +283,24 @@ class ProductRepository extends EntityRepository
     }
 
     /**
-     * Returns all products indexes by iteration
+     * Returns all products ids by iteration
      * 
-     * @return iterable
+     * @return IterableResult
      */
-    public function allProductsIdIteration()
+    public function findAllId()
     {
-        $em = $this->getEntityManager();
-        $q = $em->createQuery('select p.id from IsicsOpenMiamMiamBundle:Product p');
-        return $q->iterate([], Query::HYDRATE_ARRAY);
+       return $this->createQueryBuilder('p')->select('p.id ')
+                        ->getQuery()
+                        ->iterate([], Query::HYDRATE_SCALAR);
     }
 
     /**
-     * Return sum of products
+     * Return count products
      *
      * @return int
      */
     public function count()
     {
-       return $query =  $this->createQueryBuilder('p')->select('COUNT(p)')->getQuery()->getSingleScalarResult();
+       return (int) $this->createQueryBuilder('p')->select('COUNT(p)')->getQuery()->getSingleScalarResult();
     }
 }

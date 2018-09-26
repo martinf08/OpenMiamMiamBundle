@@ -12,9 +12,9 @@
 namespace Isics\Bundle\OpenMiamMiamBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 class UpdateMatchingProductsCommand extends ContainerAwareCommand
 {
@@ -37,14 +37,14 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
 
         $progressBar = new ProgressBar($output);
         $progressBar->setBarCharacter('<fg=green>•</>');
-        $progressBar->setEmptyBarCharacter("<fg=red>•</>");
-        $progressBar->setProgressCharacter("<fg=green>➤</>");
+        $progressBar->setEmptyBarCharacter('<fg=red>•</>');
+        $progressBar->setProgressCharacter('<fg=green>➤</>');
         $progressBar->setFormat(
             "%memory% %current%/%max% [%bar%] %percent:3s%%\n Elapsed : %elapsed% Remaining : %remaining:-6s%"
         );
 
         $callback = function($i, $nbProducts) use ($progressBar) {
-            if ($i == 1) {
+            if ($i === 1) {
                 $progressBar->start($nbProducts);
             }
             $progressBar->setCurrent($i);
@@ -52,9 +52,6 @@ class UpdateMatchingProductsCommand extends ContainerAwareCommand
 
         $productMatchingManager = $this->getContainer()->get('open_miam_miam.product_matching_manager');
         $productMatchingManager->updateMatchingProducts($callback);
-
-        $output->writeln('');
-        $output->writeln('<info>Task is completed.</info>');
     }
 }
 

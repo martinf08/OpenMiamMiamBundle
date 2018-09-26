@@ -92,7 +92,7 @@ class ProductMatchingRepository extends EntityRepository
             AND ctt1.id = ctt2.id
             GROUP BY matching_product_id, `product_id`
             ORDER BY `product_id`, nb_common_orders DESC
-            SQL;
+SQL;
         $stmt2 = $conn->prepare($insertQuery);
         $stmt2->bindParam('id', $id);
         $stmt2->execute();

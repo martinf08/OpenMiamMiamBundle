@@ -74,7 +74,7 @@ class ProductMatchingRepository extends EntityRepository
         $stmt->bindParam('id', $id);
         $stmt->execute();
 
-        $insertQuery = '
+        $insertQuery = <<<SQL
             INSERT INTO product_matching (product_id, matching_product_id, nb_common_orders)
             SELECT sor2.product_id AS `product_id`, sor1.product_id AS matching_product_id, COUNT(sor1.id) AS nb_common_orders
             FROM sales_order_row AS sor1
@@ -91,7 +91,9 @@ class ProductMatchingRepository extends EntityRepository
             AND sor2.product_id = :id
             AND ctt1.id = ctt2.id
             GROUP BY matching_product_id, `product_id`
-            ORDER BY `product_id`, nb_common_orders DESC';
+            ORDER BY `product_id`, nb_common_orders DESC
+SQL;
+
         $stmt2 = $conn->prepare($insertQuery);
         $stmt2->bindParam('id', $id);
         $stmt2->execute();

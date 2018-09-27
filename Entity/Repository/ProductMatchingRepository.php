@@ -20,46 +20,37 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 class ProductMatchingRepository extends EntityRepository
 {
     /**
-     * Returns an array of 3 Products
+     * Finds matching products
      *
-     * @param array $product
+     * @param array            $products
      * @param BranchOccurrence $branchOccurrence
+     * @param array            $excludedProducts
+     * @param int              $limit
      *
      * @return array
      */
-    public function findMatchingProducts($products, BranchOccurrence $branchOccurrence)
+    public function findMatchingProducts(array $products, BranchOccurrence $branchOccurrence, array $excludedProducts = [], $limit = 3)
     {
-        $qb = $this->getEntityManager();
-        return $qb->getRepository('IsicsOpenMiamMiamBundle:Product')
-                    ->createQueryBuilder('p')
-                    ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.product = p.id')
-                    ->join('p.producer', 'prdc')
-                    ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prdc.id')
-                    ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'pa.branchOccurrence = bocc.id')
-
-                    ->where(
-                        $qb->getRepository('IsicsOpenMiamMiamBundle:Product')->createQueryBuilder('p')
-                            ->expr()->in('p.id', $products)
-                    )
-                    ->andWhere(
-                        $qb->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->createQueryBuilder('pm')
-                            ->expr()->notIn('pm.matchingProduct', $products)
-                    )
-
-                    ->where('bocc.id = :boccid')
-                    ->andWhere('pa.isAttendee = 1')
-                    ->andwhere('p.availability = 3')
-                    ->orderBy('pm.nbCommonOrders', 'DESC')
-                    ->setParameter('boccid', $branchOccurrence->getId())
-                    ->setMaxResults(3)
-                    ->getQuery()->getResult();
+        return $this
+            ->getEntityManager()
+            ->getRepository('IsicsOpenMiamMiamBundle:Product')
+            ->filterAvailableForBranchOccurrence($branchOccurrence)
+            ->innerJoin('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.matchingProduct = p')
+            ->andWhere('pm.product IN (:products)')
+            ->andWhere('pm.matchingProduct NOT IN (:excludedProducts)')
+            ->orderBy('pm.nbCommonOrders', 'DESC')
+            ->setParameter('products', $products)
+            ->setParameter('excludedProducts', array_merge($products, $excludedProducts))
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
      * Fill product_matching table with products in a common sale's order for every product
      *
      * @param integer
-     * 
+     *
      * @return array
      */
     public function updateMatchingProducts($id)
@@ -80,11 +71,11 @@ class ProductMatchingRepository extends EntityRepository
             JOIN product as p1 ON p1.id = sor1.product_id
             JOIN category AS cat1 ON p1.category_id = cat1.id
             JOIN category_type AS ctt1 ON cat1.category_type_id = ctt1.id
-            
+
             JOIN product as p2 ON p2.id = sor2.product_id
             JOIN category AS cat2 ON p2.category_id = cat2.id
             JOIN category_type AS ctt2 ON cat2.category_type_id = ctt2.id
-            
+
             WHERE sor1.product_id != sor2.product_id
             AND sor2.product_id = :id
             AND ctt1.id = ctt2.id

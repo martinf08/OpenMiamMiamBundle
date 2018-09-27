@@ -142,15 +142,15 @@ class CatalogController extends Controller
     /**
      * Shows products matching with the current product
      *
-     * @param Branch  $branch
-     * @param integer $productId
+     * @param Branch $branch
+     * @param array  $products
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showMatchingProductsAction(Branch $branch, $productId)
+    public function showMatchingProductsAction(Branch $branch, $products)
     {
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
-        $branchOccurence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext();
+        $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext();
 
         $idsInCart = array();
         foreach ($cart->getItems() as $key => $value) {

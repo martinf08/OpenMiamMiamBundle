@@ -16,7 +16,15 @@
 {% if matches %}
 <div id="matching-products" class="show-products">
     <h2>{{ 'zone.matching_products.title'|trans }}</h2>
-    <p>{{ 'zone.matching_products.description'|trans }} :</p>
+    {% if nbCartItems is defined %}
+        {% if nbCartItems > 1 %}
+            <p>{{ 'zone.matching_products.description.plural'|trans }}:</p>
+        {% else %}
+            <p>{{ 'zone.matching_products.description.singular'|trans }}:</p>
+        {% endif %}
+    {% else %}
+        <p>{{ 'zone.matching_products.description.singular'|trans }}:</p>
+    {% endif %}
 
     <div class="row">
         {% set showNoPriceStatement = false %}

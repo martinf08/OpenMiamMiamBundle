@@ -161,7 +161,13 @@ class CartController extends Controller
     {
         $cart = $this->getCart($branch);
         $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext($branch);
-        $matches = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts($cart, $branchOccurrence);
+        $items = array();
+
+        foreach ($cart->getItems() as $item) {
+            array_push($items, $item->getProductId());
+        }
+
+        $matches = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts($items, $branchOccurrence);
 
         $nbMatches = count($matches);
         $nbCartItems = count($cart->getItems());

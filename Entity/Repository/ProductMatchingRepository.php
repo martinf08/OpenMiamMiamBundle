@@ -12,6 +12,8 @@
 namespace Isics\Bundle\OpenMiamMiamBundle\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\Expr;
+use Doctrine\ORM\QueryBuilder;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\BranchOccurrence;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 
@@ -27,7 +29,8 @@ class ProductMatchingRepository extends EntityRepository
      */
     public function findMatchingProducts($products, BranchOccurrence $branchOccurrence)
     {
-        return $qb = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:Product')
+        $qb = $this->getEntityManager();
+        return $qb->getRepository('IsicsOpenMiamMiamBundle:Product')
                     ->createQueryBuilder('p')
                     ->join('IsicsOpenMiamMiamBundle:ProductMatching', 'pm', 'WITH', 'pm.product = p.id')
                     ->join('p.producer', 'prdc')
@@ -35,11 +38,11 @@ class ProductMatchingRepository extends EntityRepository
                     ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'pa.branchOccurrence = bocc.id')
 
                     ->where(
-                        $this->createQueryBuilder('IsicsOpenMiamMiamBundle:Product p')
+                        $qb->getRepository('IsicsOpenMiamMiamBundle:Product')->createQueryBuilder('p')
                             ->expr()->in('p.id', $products)
                     )
                     ->andWhere(
-                        $this->createQueryBuilder('IsicsOpenMiamMiamBundle:ProductMatching pm')
+                        $qb->getRepository('IsicsOpenMiamMiamBundle:ProductMatching')->createQueryBuilder('pm')
                             ->expr()->notIn('pm.matchingProduct', $products)
                     )
 

@@ -15,6 +15,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\ProductMatching;
 use Isics\Bundle\OpenMiamMiamBundle\Model\Cart\Cart;
 use Doctrine\ORM\EntityManager;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\BranchOccurrence;
 
 /**
  * Class ProductMatchingRepository
@@ -36,29 +37,6 @@ class ProductMatchingManager
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
-    }
-
-    /**
-     * Find matching products
-     * 
-     * @param Product $product
-     * @param Branch $branch
-     * @param Cart $cart
-     * 
-     * @return array
-     */
-    public function findMatchingProducts(Product $product, Branch $branch, Cart $cart)
-    {
-        $productsInCart = array();
-        foreach ($cart->getItems() as $item) {
-            array_push($productsInCart, $item->getProduct()->getId());
-        }
-
-        if (empty($productsInCart)) {
-            $productsInCart = 0;
-        }
-
-        return $this->entityManager->getRepository(ProductMatching::class)->findMatchingProducts($product, $branch, $productsInCart);
     }
 
     /**

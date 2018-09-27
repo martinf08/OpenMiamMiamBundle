@@ -15,11 +15,7 @@
 
 <div id="products-of-the-moment" class="show-products">
     <h2>{{ title|trans }}</h2>
-    {% if nbCartItems is defined %}
-        {% if desc is defined %}
-            <p>{{ desc|trans }}</p>
-        {% endif %}
-    {% else %}
+    {% if desc is defined %}
         <p>{{ desc|trans }}</p>
     {% endif %}
 

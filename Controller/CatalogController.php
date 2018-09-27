@@ -164,17 +164,13 @@ class CatalogController extends Controller
         $nbMatches = count($matchingProducts);
         $title = 'zone.matching_products.title';
 
-        if ($nbCartItems > 1) {
-            $desc = 'zone.matching_products.description.plural';
-        } else {
-            $desc = 'zone.matching_products.description.singular';
-        }
+        $desc = 'zone.matching_products.description.singular';
 
         if (0 === $nbMatches) {
             return new Response();
         }
 
-        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts.html.twig', array(
+        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProductsOfTheMoment.html.twig', array(
             'branch'     => $branch,
             'products'   => $matchingProducts,
             'nbProducts' => $nbMatches,

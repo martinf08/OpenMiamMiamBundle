@@ -127,6 +127,7 @@ class CatalogController extends Controller
             ->findOfTheMomentForBranchOccurrence($branchOccurrenceManager->getNext($branch), $limit);
 
         $nbProducts = count($products);
+        $title = 'zone.products_of_the_moment.title';
 
         if (0 === $nbProducts) {
             return new Response();
@@ -136,6 +137,7 @@ class CatalogController extends Controller
             'branch'     => $branch,
             'products'   => $products,
             'nbProducts' => $nbProducts,
+            'title'      => $title,
         ));
     }
 
@@ -150,7 +152,7 @@ class CatalogController extends Controller
     public function showMatchingProductsAction(Branch $branch, $products)
     {
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
-        $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext();
+        $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext($branch);
 
         $idsInCart = array();
         foreach ($cart->getItems() as $key => $value) {
@@ -160,15 +162,24 @@ class CatalogController extends Controller
         $matchingProducts = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts($products, $branchOccurrence);
 
         $nbMatches = count($matchingProducts);
+        $title = 'zone.matching_products.title';
+
+        if ($nbCartItems > 1) {
+            $desc = 'zone.matching_products.description.plural';
+        } else {
+            $desc = 'zone.matching_products.description.singular';
+        }
 
         if (0 === $nbMatches) {
             return new Response();
         }
 
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts.html.twig', array(
-            'branch'    => $branch,
-            'matches'   => $matchingProducts,
-            'nbMatches' => $nbMatches,
+            'branch'     => $branch,
+            'products'   => $matchingProducts,
+            'nbProducts' => $nbMatches,
+            'title'      => $title,
+            'desc'       => $desc,
         ));
     }
 }

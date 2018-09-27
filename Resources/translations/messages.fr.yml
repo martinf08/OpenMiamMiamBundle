@@ -66,7 +66,8 @@ zone.news.title:                    "Actualités"
 zone.news.link:                     "Toutes les actualités"
 zone.products_of_the_moment.title:  "Les produits du moment"
 zone.matching_products.title:       "Produits complémentaires"
-zone.matching_products.description: "Les clients qui ont acheté ce produit ont également acheté"
+zone.matching_products.description.singular: "Les clients qui ont acheté ce produit ont également acheté "
+zone.matching_products.description.plural:   "Les clients qui ont acheté ces produits ont également acheté "
 zone.footer.admin_link:             "Accès gestionnaire"
 
 

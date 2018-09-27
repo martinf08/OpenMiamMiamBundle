@@ -290,7 +290,7 @@ class ProductRepository extends EntityRepository
      *
      * @return array
      */
-    public function findFrequentPurchases(User $user, Branch $branch, $productsIncart = null)
+    public function findFrequentPurchases(User $user, Branch $branch, $productsIncart = 0)
     {
         if (empty($productsIncart)) { $productsIncart = 0; }
         $em = $this->getEntityManager();

@@ -85,16 +85,18 @@ class ProductMatchingManager
         }
 
         $productsMatching = array();
-        foreach ($listOfProductMatchingByCartItems as $item)
+        foreach ($listOfProductMatchingByCartItems as $item) {
             array_push($productsMatching, $item->getId());
+        }
 
         $countProducts = array_count_values($productsMatching);
         arsort($countProducts);
 
         $filteredMatches = array();
 
-        foreach ($countProducts as $id => $value)
+        foreach ($countProducts as $id => $value) {
             array_push($filteredMatches, $productRepository->findOneByIdAndVisibleInBranch($id, $branch));
+        }
 
         return array_slice($filteredMatches, 0, 3);
     }

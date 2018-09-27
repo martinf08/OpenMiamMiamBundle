@@ -297,7 +297,7 @@ class ProductRepository extends EntityRepository
     /**
      * Returns count products
      *
-     * @return int
+     * @return integer
      */
     public function count()
     {

@@ -63,7 +63,7 @@ class ProductMatchingRepository extends EntityRepository
     }
 
     /**
-     * Fill product_matches table with products in a common sale's order for every product
+     * Fill product_matching table with products in a common sale's order for every product
      *
      * @param integer
      * 

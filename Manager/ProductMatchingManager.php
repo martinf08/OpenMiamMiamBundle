@@ -54,10 +54,6 @@ class ProductMatchingManager
             array_push($productsInCart, $item->getProduct()->getId());
         }
 
-        if (empty($productsInCart)) {
-            $productsInCart = 0; 
-        }
-
         return $this->entityManager->getRepository(ProductMatching::class)->findMatchingProducts($product, $branch, $productsInCart);
     }
 

@@ -25,7 +25,7 @@ class ProductMatchingRepository extends EntityRepository
      *
      * @return array
      */
-    public function findMatchingProducts(Product $product, Branch $branch, $productsInCart = null) 
+    public function findMatchingProducts(Product $product, Branch $branch, $productsInCart = 0) 
     {
         $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
                             ->createQueryBuilder('bocc2')

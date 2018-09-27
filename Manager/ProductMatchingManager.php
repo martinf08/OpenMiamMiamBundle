@@ -40,50 +40,6 @@ class ProductMatchingManager
     }
 
     /**
-     * Find matching products in cart
-     * 
-     * @param Cart $cart
-     * @param Branch $branch
-     * 
-     * @return array
-     */
-    public function findMatchingProductsForCart($cart, Branch $branch)
-    {
-        $productMatchingRepository = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:ProductMatching');
-        $productRepository = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product');
-
-        $listOfProductMatchingByCartItems = array();
-        $listOfIdInCart = array();
-        foreach ($cart->getItems() as $item) {
-            $listOfProductMatchingByCartItems = array_merge($listOfProductMatchingByCartItems, $productMatchingRepository->findMatchingProducts($item->getProduct(), $branch));
-            array_push($listOfIdInCart, $item->getProductId());
-        }
-
-        foreach ($listOfProductMatchingByCartItems as $key => $item) {
-            foreach ($listOfIdInCart as  $id) {
-                if ($id  == $item->getId())
-                    unset($listOfProductMatchingByCartItems[$key]);
-            }
-        }
-
-        $productsMatching = array();
-        foreach ($listOfProductMatchingByCartItems as $item) {
-            array_push($productsMatching, $item->getId());
-        }
-
-        $countProducts = array_count_values($productsMatching);
-        arsort($countProducts);
-
-        $filteredMatches = array();
-
-        foreach ($countProducts as $id => $value) {
-            array_push($filteredMatches, $productRepository->findOneByIdAndVisibleInBranch($id, $branch));
-        }
-
-        return array_slice($filteredMatches, 0, 3);
-    }
-
-    /**
      * Update the list of matching products
      *
      * @param \Closure $callback

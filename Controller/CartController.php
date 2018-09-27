@@ -160,7 +160,8 @@ class CartController extends Controller
     public function showCartMatchingProductsAction(Branch $branch)
     {
         $cart = $this->getCart($branch);
-        $matches = $this->get('open_miam_miam.product_matching_manager')->findMatchingProductsForCart($cart, $branch);
+        $branchOccurrence = $this->container->get('open_miam_miam.branc_occurrence_manager')->getNext($branch);
+        $matches = $this->get('open_miam_miam.product_matching_manager')->findMatchingProductsForCart($cart, $branchOccurrence);
 
         $nbMatches = count($matches);
         $nbCartItems = count($cart->getItems());

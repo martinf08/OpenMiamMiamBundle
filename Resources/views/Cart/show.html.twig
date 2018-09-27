@@ -16,7 +16,7 @@
             {% include 'IsicsOpenMiamMiamBundle:Cart:cart.html.twig' %}
         </div>
 
-        {{ render(controller('IsicsOpenMiamMiamBundle:Cart:showCartMatchingProducts', {'branch': branch})) }}
+        {{ render(controller('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts', {'branch': branch})) }}
     {% endblock %}
 
     {% block javascript %}

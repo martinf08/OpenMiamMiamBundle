@@ -5,50 +5,70 @@
  # This source file is subject to the AGPL v3 license that is bundled
  # with this source code in the file LICENSE.
  #}
-<div class="row">
-    <div class="col-md-12">
-       <h2>Les clients qui ont acheté ce produit ont également acheté :</h2>
-    </div>
-</div>
-<div class="row">
-    {% for match in matches  %}
-        <div class="col-md-4">
-            <div class="well">
-                {% if match.image is not null %}
-                    <img src="{{ get_image_product_path(match)|imagine_filter('l') }}" alt="{{ match.name }}"
-                        class="img-thumbnail"/>
-                {% else %}
-                    <img src="{{ 'bundles/isicsopenmiammiam/img/picture_placeholder.png'|imagine_filter('l') }}"
-                        alt="{{ match.name }}" class="img-thumbnail"/>
-                {% endif %}
-                <dl>
-                    <dd>
+{% if nbMatches == 1 %}
+    {% set colClass = 'col-md-12' %}
+{% elseif nbMatches == 2 %}
+    {% set colClass = 'col-md-6' %}
+{% elseif nbMatches == 3 %}
+    {% set colClass = 'col-md-4' %}
+{% endif %}
+
+{% if matches %}
+<div id="matching-products" class="show-products">
+    <h2>{{ 'zone.matching_products.title'|trans }}</h2>
+    <p>{{ 'zone.matching_products.description'|trans }} :</p>
+
+    <div class="row">
+        {% set showNoPriceStatement = false %}
+        {% for match in matches %}
+            <div class="{{ colClass }}">
+                <div class="panel panel-default">
+                    <div class="panel-body">
                         <h3>
                             <a href="{{ path('open_miam_miam.catalog.product', {'branchSlug': branch.slug, 'productSlug': match.slug, 'productId': match.id}) }}">
-                                {{ match.name }}
-                            </a>
+                                {{ match.name }}</a>{% if match.isBio %}&nbsp;<strong class="bio"><span>{{ 'bio'|trans }}</span></strong>{% endif %}
                         </h3>
-                    </dd>
-                     <dt>{{ 'producer'|trans }}</dt>
-                    <dd>
-                        <a href="{{ path('open_miam_miam.producer', {'producerSlug': match.producer.slug}) }}">
-                            <span class="glyphicon glyphicon-user"></span> {{ match.producer }}
-                        </a>
-                    </dd>
-                    <dt>{{ 'price'|trans }}</dt>
-                    <dd>
-                        <span class="price">
+                        <p>
+                            <a href="{{ path('open_miam_miam.catalog.product', {'branchSlug': branch.slug, 'productSlug': match.slug, 'productId': match.id}) }}">
+                                {% if match.image is not null %}
+                                    <img src="{{ get_image_product_path(match)|imagine_filter('m') }}" alt="{{ match.name }}" class="img-thumbnail" />
+                                {% else %}
+                                    <img src="{{ 'bundles/isicsopenmiammiam/img/picture_placeholder.png'|imagine_filter('m') }}" alt="{{ match.name }}" class="img-thumbnail" />
+                                {% endif %}
+                            </a>
+                        </p>
+                        <p>
+                            {% if match.priceInfo %}
+                                {{ match.priceInfo }}
+                            {% else %}
+                                &nbsp;
+                            {% endif %}
+                        </p>
+                        <p>
+                            <a href="{{ path('open_miam_miam.producer', {'producerSlug': match.producer.slug}) }}">
+                                <span class="glyphicon glyphicon-user"></span> {{ match.producer }}
+                            </a>
+                        </p>
+                        <p class="price">
                             {% if not match.hasNoPrice %}
-                                {% set showNoPriceStatement = false %}
                                 {{ match.price|number_format_currency(open_miam_miam.currency) }}
                             {% else %}
                                 {% set showNoPriceStatement = true %}
                                 <span class="glyphicon glyphicon-time"></span>*
                             {% endif %}
-                        </span>
-                    </dd>
-                    {{ render(controller('IsicsOpenMiamMiamBundle:Cart:ShowAddForm', {'branch': branch, 'product': match, 'view': 'IsicsOpenMiamMiamBundle:Catalog:showProductAddForm.html.twig'})) }}
+                        </p>
+                        <p>
+                            {{ render(controller('IsicsOpenMiamMiamBundle:Cart:ShowAddForm', {'branch': branch, 'product': match})) }}
+                        </p>
+                    </div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
 </div>
+
+{% if showNoPriceStatement %}
+    {% include 'IsicsOpenMiamMiamBundle:Branch:noPriceStatement.html.twig' %}
+{% endif %}
+
+{% endif %}

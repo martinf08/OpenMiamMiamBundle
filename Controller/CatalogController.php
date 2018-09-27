@@ -148,10 +148,15 @@ class CatalogController extends Controller
      */
     public function showMatchingProductsAction(Branch $branch, $productId)
     {
-        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
-        $matchingProducts = $this->get('open_miam_miam.product_matching_manager')
-                                 ->findMatchingProducts($product, $branch, $cart);
+        $branchOccurence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext();
+
+        $idsInCart = array();
+        foreach ($cart->getItems() as $key => $value) {
+            array_push($idsInCart, $key);
+        }
+
+        $matchingProducts = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts($products, $branchOccurrence);
 
         $nbMatches = count($matchingProducts);
 

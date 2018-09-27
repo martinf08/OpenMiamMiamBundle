@@ -83,10 +83,8 @@ class CatalogController extends Controller
      */
     public function showProductAction(Branch $branch, $productSlug, $productId)
     {
-        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
-        $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
-        $matchingProducts = $this->get('open_miam_miam.product_matching_manager')
-                                 ->findMatchingProducts($product, $branch, $cart);
+        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')
+                        ->findOneByIdAndVisibleInBranch($productId, $branch);
 
         if (null === $product) {
             throw new NotFoundHttpException('Product not found');
@@ -106,7 +104,6 @@ class CatalogController extends Controller
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProduct.html.twig', array(
             'branch'  => $branch,
             'product' => $product,
-            'matches' => $matchingProducts,
         ));
     }
 
@@ -138,6 +135,35 @@ class CatalogController extends Controller
             'branch'     => $branch,
             'products'   => $products,
             'nbProducts' => $nbProducts,
+        ));
+    }
+
+    /**
+     * Shows products of the moment
+     *
+     * @param Branch  $branch
+     * @param integer $productId
+     * @param integer $limit
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showMatchingProductsAction(Branch $branch, $productId, $limit = 3)
+    {
+        $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
+        $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
+        $matchingProducts = $this->get('open_miam_miam.product_matching_manager')
+                                 ->findMatchingProducts($product, $branch, $cart);
+
+        $nbMatches = count($matchingProducts);
+
+        if (0 === $nbMatches) {
+            return new Response();
+        }
+
+        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts.html.twig', array(
+            'branch'     => $branch,
+            'matches'   => $matchingProducts,
+            'nbMatches' => $nbMatches,
         ));
     }
 }

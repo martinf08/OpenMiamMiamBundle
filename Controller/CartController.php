@@ -91,14 +91,10 @@ class CartController extends Controller
             $violationMapper->mapViolation($error, $form);
         }
 
-        $productMatchingManager = $this->get('open_miam_miam.product_matching_manager');
-        $matches = $productMatchingManager->findMatchingProductsForCart($cart, $branch);
-
         return $this->render('IsicsOpenMiamMiamBundle:Cart:show.html.twig', array(
             'branch' => $branch,
             'cart'   => $cart,
             'form'   => $form->createView(),
-            'matches'=> $matches,
         ));
     }
 
@@ -152,6 +148,33 @@ class CartController extends Controller
         }
 
         return $this->render($view, $renderParameters);
+    }
+
+    /**
+     * Shows products matching with the cart items
+     *
+     * @param Branch  $branch
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function showCartMatchingProductsAction(Branch $branch)
+    {
+        $cart = $this->getCart($branch);
+        $matches = $this->get('open_miam_miam.product_matching_manager')->findMatchingProductsForCart($cart, $branch);
+
+        $nbMatches = count($matches);
+        $nbCartItems = count($cart->getItems());
+
+        if (0 === $nbMatches) {
+            return new Response();
+        }
+
+        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts.html.twig', array(
+            'branch'      => $branch,
+            'matches'     => $matches,
+            'nbMatches'   => $nbMatches,
+            'nbCartItems' => $nbCartItems,
+        ));
     }
 
     /**

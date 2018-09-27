@@ -139,15 +139,14 @@ class CatalogController extends Controller
     }
 
     /**
-     * Shows products of the moment
+     * Shows products matching with the current product
      *
      * @param Branch  $branch
      * @param integer $productId
-     * @param integer $limit
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showMatchingProductsAction(Branch $branch, $productId, $limit = 3)
+    public function showMatchingProductsAction(Branch $branch, $productId)
     {
         $product = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($productId, $branch);
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
@@ -161,7 +160,7 @@ class CatalogController extends Controller
         }
 
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showMatchingProducts.html.twig', array(
-            'branch'     => $branch,
+            'branch'    => $branch,
             'matches'   => $matchingProducts,
             'nbMatches' => $nbMatches,
         ));

@@ -146,25 +146,10 @@ class CatalogController extends Controller
      */
     public function showFrequentPurchasesAction(Branch $branch)
     {
-
         $user = $this->get('security.context')->getToken()->getUser();
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
-        $productsInCart = array();
-        foreach ($cart->getItems() as $item) {
-            array_push($productsInCart, $item->getProduct()->getId());
-        }
+        $productsAndQuantity = $this->container->get('open_miam_miam.product_manager')->findForFrequentPurchases($user, $branch, $cart);
 
-        $frequentPurchases = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')-> findFrequentPurchases($user, $branch, $productsInCart);
-        $productsAndQuantity = array();
-
-        foreach ($frequentPurchases as $item) {
-            $association = array();
-            $association['product'] = $this->getDoctrine()->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($item['id'], $branch);
-            $association['quantity'] =  number_format(ceil($item['quantity']),0,'.', ' ');
-
-            array_push($productsAndQuantity, $association);
-        }
-        $productsAndQuantity = array_slice($productsAndQuantity, 0, 3);
         $nbproducts = count($productsAndQuantity);
 
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showFrequentPurchases.html.twig', array(

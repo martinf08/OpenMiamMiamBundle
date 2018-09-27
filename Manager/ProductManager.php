@@ -17,6 +17,7 @@ use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Category;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Producer;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
+use Isics\Bundle\OpenMiamMiamBundle\Model\Cart\Cart;
 use Isics\Bundle\OpenMiamMiamBundle\Model\Product\ArtificialProduct;
 use Isics\Bundle\OpenMiamMiamUserBundle\Entity\User;
 use Symfony\Component\Filesystem\Filesystem;
@@ -372,5 +373,36 @@ class ProductManager
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Return frequent purchase product with quantity
+     *
+     * @param User $user
+     * @param Branch $branch
+     * @param Cart $cart
+     *
+     * @return array
+     */
+
+    public function findForFrequentPurchases($user, $branch, $cart)
+    {
+        $productsInCart = array();
+        foreach ($cart->getItems() as $item) {
+            array_push($productsInCart, $item->getProduct()->getId());
+        }
+
+        $frequentPurchases = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product')-> findFrequentPurchases($user, $branch, $productsInCart);
+        $productsAndQuantity = array();
+
+        foreach ($frequentPurchases as $item) {
+            $association = array();
+            $association['product'] = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($item['id'], $branch);
+            $association['quantity'] =  number_format(ceil($item['quantity']),0,'.', ' ');
+
+            array_push($productsAndQuantity, $association);
+        }
+
+        return array_slice($productsAndQuantity, 0, 3);
     }
 }

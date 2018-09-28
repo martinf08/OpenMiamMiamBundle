@@ -149,7 +149,7 @@ class CatalogController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function showMatchingProductsAction(Branch $branch, $productId)
+    public function showMatchingProductsAction(Branch $branch, $productId = null)
     {
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
         $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext($branch);
@@ -158,8 +158,11 @@ class CatalogController extends Controller
         foreach ($cart->getItems() as $key => $value) {
             array_push($idsInCart, $key);
         }
+        if ($productId === null) {
+            $productId = $idsInCart;
+        }
 
-        $matchingProducts = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts(array($productId), $branchOccurrence);
+        $matchingProducts = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts(array($productId), $branchOccurrence, $idsInCart);
 
         $nbMatches = count($matchingProducts);
         $title = 'zone.matching_products.title';

@@ -151,49 +151,6 @@ class CartController extends Controller
     }
 
     /**
-     * Shows products matching with the cart items
-     *
-     * @param Branch  $branch
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function showCartMatchingProductsAction(Branch $branch)
-    {
-        $cart = $this->getCart($branch);
-        $branchOccurrence = $this->container->get('open_miam_miam.branch_occurrence_manager')->getNext($branch);
-        $items = array();
-
-        foreach ($cart->getItems() as $item) {
-            array_push($items, $item->getProductId());
-        }
-
-        $matches = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts($items, $branchOccurrence);
-
-        $nbMatches = count($matches);
-        $nbCartItems = count($cart->getItems());
-        $title = 'zone.matching_products.title';
-
-        if ($nbCartItems > 1) {
-            $desc = 'zone.matching_products.description.plural';
-        } else {
-            $desc = 'zone.matching_products.description.singular';
-        }
-
-        if (0 === $nbMatches) {
-            return new Response();
-        }
-
-        return $this->render('IsicsOpenMiamMiamBundle:Catalog:showProductsOfTheMoment.html.twig', array(
-            'branch'      => $branch,
-            'products'    => $matches,
-            'nbProducts'  => $nbMatches,
-            'nbCartItems' => $nbCartItems,
-            'title'       => $title,
-            'desc'        => $desc
-        ));
-    }
-
-    /**
      * Adds a product to cart (POST) AJAX or not
      *
      * @todo Validate global quantity of items

@@ -14,6 +14,7 @@ namespace Isics\Bundle\OpenMiamMiamBundle\Manager;
 use Doctrine\ORM\EntityManager;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Association;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Branch;
+use Isics\Bundle\OpenMiamMiamBundle\Entity\BranchOccurrence;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Category;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Producer;
 use Isics\Bundle\OpenMiamMiamBundle\Entity\Product;
@@ -60,12 +61,14 @@ class ProductManager
      * @param EntityManager $entityManager
      * @param KernelInterface $kernel
      * @param ActivityManager $activityManager
+     * @param BranchOccurrenceManager $branchOccurrenceManager
      */
-    public function __construct(array $config, EntityManager $entityManager, KernelInterface $kernel, ActivityManager $activityManager)
+    public function __construct(array $config, EntityManager $entityManager, KernelInterface $kernel, ActivityManager $activityManager, BranchOccurrenceManager $branchOccurrenceManager)
     {
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
         $this->activityManager = $activityManager;
+        $this->branchOccurrenceManager = $branchOccurrenceManager;
 
         $resolver = new OptionsResolver();
         $this->setDefaultOptions($resolver);
@@ -378,27 +381,31 @@ class ProductManager
     /**
      * Return frequent purchase product with quantity
      *
-     * @param User $user
+     * @param User   $user
      * @param Branch $branch
-     * @param Cart $cart
+     * @param Cart   $cart
      *
      * @return array
      */
 
     public function findForFrequentPurchases($user, $branch, $cart)
     {
+        if (!$this->branchOccurrenceManager->hasNext($branch)) {
+            return new Response();
+        }
+
         $productsInCart = array();
         foreach ($cart->getItems() as $item) {
             array_push($productsInCart, $item->getProduct()->getId());
         }
 
-        $frequentPurchases = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product')-> findFrequentPurchases($user, $branch, $productsInCart);
+        $frequentPurchases = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product')->findFrequentPurchases($user, $this->branchOccurrenceManager->getNext($branch), $productsInCart);
         $productsAndQuantity = array();
 
         foreach ($frequentPurchases as $item) {
             $association = array();
             $association['product'] = $this->entityManager->getRepository('IsicsOpenMiamMiamBundle:Product')->findOneByIdAndVisibleInBranch($item['id'], $branch);
-            $association['quantity'] =  number_format(ceil($item['quantity']),0,'.', ' ');
+            $association['quantity'] =  number_format(ceil($item['quantity']), 0, '.', ' ');
 
             array_push($productsAndQuantity, $association);
         }

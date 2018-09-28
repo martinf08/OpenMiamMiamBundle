@@ -286,51 +286,35 @@ class ProductRepository extends EntityRepository
      * Return products bought by the user at least twice
      *
      * @param User $user
-     * @param Branch $Branch
+     * @param BranchOccurrence $branchOccurrence
+     * @param array $productsInCart
      *
      * @return array
      */
-    public function findFrequentPurchases(User $user, Branch $branch, $productsIncart = 0)
+    public function findFrequentPurchases(User $user, BranchOccurrence $branchOccurrence, $productsInCart)
     {
-        if (empty($productsIncart)) { $productsIncart = 0; }
-        $em = $this->getEntityManager();
-        $query = $em->getRepository('IsicsOpenMiamMiamUserBundle:User');
+        if (empty($productsInCart)) { $productsInCart = array(0); }
+        // $qb = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamUserBundle:User');
 
-        $nextBranchQ = $this->getEntityManager()->getRepository('IsicsOpenMiamMiamBundle:BranchOccurrence')
-            ->createQueryBuilder('bocc2')
-            ->select('MIN(bocc2.begin)')
-            ->where('bocc2.begin > CURRENT_TIMESTAMP()')
-            ->andWhere('bocc2.branch = :br')
-            ->setParameter('br', ':br')
-            ->getDQL();
+        // dump($user);
+        // dump($branchOccurrence);
+        // dump($productsInCart);die();
 
-        return $query->createQueryBuilder('u')
+        return $this->filterAvailableForBranchOccurrence($branchOccurrence)
             ->select('p.id' ,'p.name ', 'COUNT(sor.product) as frequency', 'AVG(sor.quantity) as quantity' )
-            ->join('IsicsOpenMiamMiamBundle:SalesOrder', 'so', 'WITH', 'so.user = u.id')
-            ->join('so.salesOrderRows','sor')
-            ->join('sor.product', 'p')
-            ->join('p.branches', 'br')
-            ->join('p.producer', 'prcd')
-            ->join('IsicsOpenMiamMiamBundle:BranchOccurrence', 'bocc', 'WITH', 'bocc.branch = :br')
-            ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prcd.id')
-            ->where('u.id = :id_user')
-            ->andWhere('pa.branchOccurrence = bocc.id')
-            ->andWhere(
-                $this->createQueryBuilder('IsicsOpenMiamMiamBundle:BranchOccurrence bocc')
-                    ->expr()->in('bocc.begin', $nextBranchQ)
-            )
+            ->join('IsicsOpenMiamMiamBundle:SalesOrder', 'so', 'WITH', 'so.user = :id_user')
+            ->join('so.salesOrderRows', 'sor')
+            ->join('p.producer', 'prdc')
+            ->join('IsicsOpenMiamMiamBundle:ProducerAttendance', 'pa', 'WITH', 'pa.producer = prdc.id')
+            ->where('pa.branchOccurrence = :boccid')
             ->andWhere('p.availability = 3')
-            ->andWhere('br.id = :br')
-            ->andWhere(
-                $this->createQueryBuilder('IsicsOpenMiamMiamBundle:Product p')
-                    ->expr()->notIn('p.id', ':productsInCart')
-            )
+            ->andWhere('p.id NOT IN (:productsInCart)')
             ->andWhere('pa.isAttendee = 1')
             ->groupBy('p.name, p.id')
             ->having('frequency >= 2')
-            ->setParameter('id_user', $user->getId())
-            ->setParameter('br', $branch->getId())
-            ->setParameter('productsInCart', $productsIncart)
+            ->setParameter('id_user', 3539)
+            ->setParameter('boccid', 1464)
+            ->setParameter('productsInCart', array(0))
             ->orderBy('frequency', 'DESC')
             ->getQuery()
             ->getResult();

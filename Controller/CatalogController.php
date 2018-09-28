@@ -148,15 +148,15 @@ class CatalogController extends Controller
     {
         $user = $this->get('security.context')->getToken()->getUser();
         $cart = $this->container->get('open_miam_miam.cart_manager')->get($branch);
+
         $productsAndQuantity = $this->container->get('open_miam_miam.product_manager')->findForFrequentPurchases($user, $branch, $cart);
 
-        $nbproducts = count($productsAndQuantity);
+        $nbProducts = count($productsAndQuantity);
 
         return $this->render('IsicsOpenMiamMiamBundle:Catalog:showFrequentPurchases.html.twig', array(
-            'branch' => $branch,
-            'products' => $productsAndQuantity,
-            'nbProducts' => $nbproducts,
-            'user' => $user,
+            'branch'     => $branch,
+            'products'   => $productsAndQuantity,
+            'nbProducts' => $nbProducts,
         ));
     }
 }

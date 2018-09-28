@@ -158,16 +158,23 @@ class CatalogController extends Controller
         foreach ($cart->getItems() as $key => $value) {
             array_push($idsInCart, $key);
         }
+        
         if ($productId === null) {
             $productId = $idsInCart;
+
+            if (count($productId) > 1) {
+                $desc = 'zone.matching_products.description.plural';
+            } else {
+                $desc = 'zone.matching_products.description.singular';
+            }
+        } else {
+            $desc = 'zone.matching_products.description.singular';
         }
 
         $matchingProducts = $this->getDoctrine()->getRepository(ProductMatching::class)->findMatchingProducts(array($productId), $branchOccurrence, $idsInCart);
 
         $nbMatches = count($matchingProducts);
         $title = 'zone.matching_products.title';
-
-        $desc = 'zone.matching_products.description.singular';
 
         if (0 === $nbMatches) {
             return new Response();
